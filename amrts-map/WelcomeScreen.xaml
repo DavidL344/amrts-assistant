@@ -6,7 +6,7 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:local="clr-namespace:amrts_map"
         mc:Ignorable="d"
-        ui:WindowHelper.UseModernWindowStyle="True" Height="450" Width="850">
+        ui:WindowHelper.UseModernWindowStyle="True" Height="450" Width="850" MinHeight="450" MinWidth="850">
     <Grid AllowDrop="True" Margin="40,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -21,12 +21,18 @@
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Map Assistant for Army Men RTS" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold"/>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Open recent" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,0,0,0"/>
 
-        <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Stretch">
+        <ListBox Grid.Row="2" Grid.Column="0" Margin="5, 5, 5, 40" SelectionChanged="ListBox_SelectionChanged" Name="lb_recent">
+            <ListBox.Items>
+                <!--<ListBoxItem Content="Sample Project"/>-->
+            </ListBox.Items>
+        </ListBox>
+
+        <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Get started" FontSize="20" VerticalAlignment="Bottom" Margin="10,0"/>
+            <TextBlock Grid.Row="0" Text="Get started" FontSize="20" VerticalAlignment="Bottom" Margin="5,0"/>
             <Button Grid.Row="1" Content="Create a new project" Margin="5,10" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
             <Button Grid.Row="1" Content="Open a project" Margin="5,45" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
             <Button Grid.Row="1" Content="Import a map" Margin="5,80" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
@@ -34,25 +40,5 @@
             <Separator Grid.Row="1" Margin="5,115" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
             <ui:HyperlinkButton Grid.Row="2" Grid.Column="1" Content="" Margin="0,110" HorizontalAlignment="Center" VerticalAlignment="Top" Height="33" Grid.RowSpan="2"/>
         </Grid>
-
-        <ui:ListView
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    BorderThickness="1"
-                    BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                    Margin="5"
-                    VirtualizingPanel.ScrollUnit="Pixel">
-            <ui:ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,12,0,12" AutomationProperties.Name="{Binding Title, Mode=OneTime}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="150" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal"></StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ui:ListView.ItemTemplate>
-        </ui:ListView>
     </Grid>
 </Window>
