@@ -36,14 +36,6 @@ namespace amrts_map
             foreach (string[] value in RecentlyOpenedFiles) lb_recent.Items.Add(String.Format("{0}\r\n{1}{2}", value[0], "          ", value[1]));
         }
 
-        private void ContinueNoMap(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            this.Hide();
-            mainWindow.ShowDialog();
-            this.Show();
-        }
-
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lb_recent.SelectedIndex == -1) return;
@@ -51,6 +43,37 @@ namespace amrts_map
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
             MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
+        }
+
+        private void ButtonClicked(object sender, RoutedEventArgs e)
+        {
+            string buttonName = (sender as Button).Name.ToString().Split(new string[] { "btn_" }, StringSplitOptions.RemoveEmptyEntries)[0];
+            if (buttonName.StartsWith("start_"))
+            {
+                buttonName = buttonName.Split(new string[] { "start_" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                PerformAction(buttonName);
+                return;
+            }
+        }
+
+        private void PerformAction(string action)
+        {
+            switch (action.ToLower())
+            {
+                case "new":
+                case "open":
+                case "import":
+                    MessageBox.Show("Coming Soon!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "empty":
+                    MainWindow mainWindow = new MainWindow();
+                    this.Hide();
+                    mainWindow.ShowDialog();
+                    this.Show();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

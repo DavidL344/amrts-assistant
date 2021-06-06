@@ -33,12 +33,12 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Get started" FontSize="20" VerticalAlignment="Bottom" Margin="5,0"/>
-            <Button Grid.Row="1" Content="Create a new project" Margin="5,10" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
-            <Button Grid.Row="1" Content="Open a project" Margin="5,45" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
-            <Button Grid.Row="1" Content="Import a map" Margin="5,80" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
-            <Button Grid.Row="1" Content="Continue without opening a map" Margin="5,120" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ContinueNoMap"/>
+            <Button x:Name="btn_start_new" Grid.Row="1" Content="Create a new project" Margin="5,10" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
+            <Button x:Name="btn_start_open" Grid.Row="1" Content="Open a project" Margin="5,45" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
+            <Button x:Name="btn_start_import" Grid.Row="1" Content="Import a map" Margin="5,80" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
             <Separator Grid.Row="1" Margin="5,115" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
-            <ui:HyperlinkButton Grid.Row="2" Grid.Column="1" Content="" Margin="0,110" HorizontalAlignment="Center" VerticalAlignment="Top" Height="33" Grid.RowSpan="2"/>
+            <!--<ui:HyperlinkButton Grid.Row="2" Grid.Column="1" Content="" Margin="0,110" HorizontalAlignment="Center" VerticalAlignment="Top" Height="33" Grid.RowSpan="2"/>-->
+            <Button x:Name="btn_start_empty" Grid.Row="1" Content="Continue without opening a map" Margin="5,120" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
         </Grid>
     </Grid>
 </Window>

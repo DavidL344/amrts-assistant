@@ -8,40 +8,41 @@
         mc:Ignorable="d"
         ui:WindowHelper.UseModernWindowStyle="True"
         Title="Map Assistant for Army Men RTS" Height="450" Width="800" WindowState="Maximized">
-    <DockPanel>
-        <Menu DockPanel.Dock="Top" VerticalAlignment="Top">
-            <MenuItem Header="File">
-                <MenuItem Header="New" InputGestureText="Ctrl+N"/>
-                <MenuItem Header="Open" InputGestureText="Ctrl+O"/>
-                <Separator />
-                <MenuItem Header="Save" InputGestureText="Ctrl+S"/>
-                <MenuItem Header="Save As..." InputGestureText="Ctrl+Shift+S"/>
-                <Separator />
-                <MenuItem Header="Import..." InputGestureText="Ctrl+I"/>
-                <MenuItem Header="Export..." InputGestureText="Ctrl+E"/>
-                <Separator />
-                <MenuItem Header="Close" InputGestureText="Ctrl+W"/>
-                <MenuItem Header="Exit" InputGestureText="Alt+F4"/>
-            </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Header="Discard Changes"/>
-            </MenuItem>
-            <MenuItem Header="Build">
-                <MenuItem Header="Build Project"/>
-                <MenuItem Header="Clean Project"/>
-            </MenuItem>
-        </Menu>
-    </DockPanel>
-    <!--
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+
+        <Separator Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Margin="0,-1"/>
+        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Menu DockPanel.Dock="Top" VerticalAlignment="Top">
+                <MenuItem Header="File">
+                    <MenuItem x:Name="btn_menu_file_new" Header="New" InputGestureText="Ctrl+N" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="btn_menu_file_open" Header="Open" InputGestureText="Ctrl+O" Click="MenuItemClicked"/>
+                    <Separator/>
+                    <MenuItem x:Name="btn_menu_file_save" Header="Save" InputGestureText="Ctrl+S" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="btn_menu_file_save_as" Header="Save As..." InputGestureText="Ctrl+Shift+S" Click="MenuItemClicked"/>
+                    <Separator/>
+                    <MenuItem x:Name="btn_menu_file_import" Header="Import..." InputGestureText="Ctrl+I" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="btn_menu_file_export" Header="Export..." InputGestureText="Ctrl+E" Click="MenuItemClicked"/>
+                    <Separator/>
+                    <MenuItem x:Name="btn_menu_file_close" Header="Close" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="btn_menu_file_exit" Header="Exit" Click="MenuItemClicked"/>
+                </MenuItem>
+                <MenuItem Header="Edit">
+                    <MenuItem x:Name="btn_menu_edit_discard_changes" Header="Discard Changes" Click="MenuItemClicked"/>
+                </MenuItem>
+                <MenuItem Header="Build">
+                    <MenuItem x:Name="btn_menu_build_build_project" Header="Build Project" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="btn_menu_build_clean_project" Header="Clean Project" Click="MenuItemClicked"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        
     </Grid>
-    -->
 </Window>
