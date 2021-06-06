@@ -7,8 +7,41 @@
         xmlns:local="clr-namespace:amrts_map"
         mc:Ignorable="d"
         ui:WindowHelper.UseModernWindowStyle="True"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Map Assistant for Army Men RTS" Height="450" Width="800">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="Open" InputGestureText="Ctrl+O"/>
+                <Separator />
+                <MenuItem Header="Save" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="Save As..." InputGestureText="Ctrl+Shift+S"/>
+                <Separator />
+                <MenuItem Header="Import..." InputGestureText="Ctrl+I"/>
+                <MenuItem Header="Export..." InputGestureText="Ctrl+E"/>
+                <Separator />
+                <MenuItem Header="Close" InputGestureText="Ctrl+W"/>
+                <MenuItem Header="Exit" InputGestureText="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Discard Changes"/>
+            </MenuItem>
+            <MenuItem Header="Build">
+                <MenuItem Header="Build Project"/>
+                <MenuItem Header="Clean Project"/>
+            </MenuItem>
+        </Menu>
+    </DockPanel>
+    <!--
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
     </Grid>
+    -->
 </Window>
