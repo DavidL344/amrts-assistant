@@ -20,21 +20,27 @@ namespace amrts_map
     /// </summary>
     public partial class MainWindow : Window
     {
+        public bool IsProjectOpened = false;
+        private TabControl mainTabControl;
+
         public MainWindow(string projectPath = null)
         {
             InitializeComponent();
             this.KeyDown += new KeyEventHandler(this.ActionListener);
-
-            if (projectPath == null)
-            {
-                mi_menu_build_build_project.IsEnabled = false;
-            }
+            if (projectPath == null) ProjectLoaded(false);
         }
 
         private void MenuItemClicked(object sender, RoutedEventArgs e)
         {
             string menuItemName = (sender as FrameworkElement).Name.ToString().Split(new string[] { "mi_menu_" }, StringSplitOptions.RemoveEmptyEntries)[0];
             PerformAction(menuItemName);
+        }
+
+        private void ProjectLoaded(bool loaded)
+        {
+            mi_menu_file_save.IsEnabled = mi_menu_file_save_as.IsEnabled = mi_menu_file_export.IsEnabled = loaded;
+            mi_menu_edit_discard_changes.IsEnabled = mi_menu_edit_run_studio.IsEnabled = loaded;
+            mi_menu_build_build_project.IsEnabled = mi_menu_build_clean_project.IsEnabled = loaded;
         }
 
         public void ActionListener(object sender, KeyEventArgs e)
@@ -59,8 +65,14 @@ namespace amrts_map
                     case Key.E:
                         action = "file_export";
                         break;
+                    case Key.Delete:
+                        action = "edit_discard_changes";
+                        break;
                     case Key.R:
                         action = "edit_run_studio";
+                        break;
+                    case Key.B:
+                        action = "build_build_project";
                         break;
                     default:
                         return;
@@ -71,6 +83,23 @@ namespace amrts_map
 
         public void PerformAction(string action)
         {
+            if (!IsProjectOpened)
+            {
+                switch (action.ToLower())
+                {
+                    case "file_save":
+                    case "file_save_as":
+                    case "file_export":
+                    case "edit_discard_changes":
+                    case "edit_run_studio":
+                    case "build_build_project":
+                    case "build_clean_project":
+                        return;
+                    default:
+                        break;
+                }
+            }
+
             switch (action.ToLower())
             {
                 case "file_new":
@@ -93,6 +122,20 @@ namespace amrts_map
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void TabControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            mainTabControl = (sender as TabControl);
+
+            // Set sample tabs
+            string[] sampleTabNames = new string[] { "game.cfg", "objects.cfg", "terrain.blk", "terrain.tga", "types.cfg", "engine__loading__back.tga" };
+            foreach (string sampleTabName in sampleTabNames)
+            {
+                TabItem tabItem = new TabItem();
+                tabItem.Header = sampleTabName;
+                mainTabControl.Items.Add(tabItem);
             }
         }
     }

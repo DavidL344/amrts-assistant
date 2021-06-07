@@ -10,7 +10,7 @@
         Title="Map Assistant for Army Men RTS" Height="450" Width="800" WindowState="Maximized">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -47,11 +47,13 @@
             </Menu>
         </DockPanel>
 
-        <TabControl Grid.Row="1" TabStripPlacement="Bottom">
+        <TabControl Grid.Row="1" TabStripPlacement="Bottom" Loaded="TabControl_Loaded">
             <TabItem Header="Sample Project">
                 <TabControl TabStripPlacement="Left">
                     <TabItem Header="General">
-                        <Grid/>
+                        <Grid Margin="20">
+                            <CheckBox Name="_friendlyResourceNames" Content="Show friendly resource names where possible" Margin="0, 0, 20, 0" VerticalAlignment="Top"/>
+                        </Grid>
                     </TabItem>
                     <TabItem Header="Build">
                         <Grid Margin="20">
@@ -68,21 +70,11 @@
                     </TabItem>
                 </TabControl>
             </TabItem>
-            <TabItem Header="game.cfg">
+            <!--
+            <TabItem Header="Sample">
                 <Grid/>
             </TabItem>
-            <TabItem Header="objects.cfg">
-                <Grid/>
-            </TabItem>
-            <TabItem Header="terrain.blk">
-                <Grid/>
-            </TabItem>
-            <TabItem Header="terrain.tga">
-                <Grid/>
-            </TabItem>
-            <TabItem Header="types.cfg">
-                <Grid/>
-            </TabItem>
+            -->
         </TabControl>
         <TabControl Grid.Row="1" Grid.Column="1" TabStripPlacement="Bottom">
             <TabItem Header="File Explorer">
