@@ -15,34 +15,82 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250"/>
         </Grid.ColumnDefinitions>
 
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="1,0,0,0"/>
         <Separator Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Margin="0,-1"/>
+
         <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Top" VerticalAlignment="Top">
-                <MenuItem Header="File">
-                    <MenuItem x:Name="btn_menu_file_new" Header="New" InputGestureText="Ctrl+N" Click="MenuItemClicked"/>
-                    <MenuItem x:Name="btn_menu_file_open" Header="Open" InputGestureText="Ctrl+O" Click="MenuItemClicked"/>
+                <MenuItem x:Name="mi_menu_file" Header="File">
+                    <MenuItem x:Name="mi_menu_file_new" Header="New" InputGestureText="Ctrl+N" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_file_open" Header="Open" InputGestureText="Ctrl+O" Click="MenuItemClicked"/>
                     <Separator/>
-                    <MenuItem x:Name="btn_menu_file_save" Header="Save" InputGestureText="Ctrl+S" Click="MenuItemClicked"/>
-                    <MenuItem x:Name="btn_menu_file_save_as" Header="Save As..." InputGestureText="Ctrl+Shift+S" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_file_save" Header="Save" InputGestureText="Ctrl+S" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_file_save_as" Header="Save As..." InputGestureText="Ctrl+Shift+S" Click="MenuItemClicked"/>
                     <Separator/>
-                    <MenuItem x:Name="btn_menu_file_import" Header="Import..." InputGestureText="Ctrl+I" Click="MenuItemClicked"/>
-                    <MenuItem x:Name="btn_menu_file_export" Header="Export..." InputGestureText="Ctrl+E" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_file_import" Header="Import..." InputGestureText="Ctrl+I" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_file_export" Header="Export..." InputGestureText="Ctrl+E" Click="MenuItemClicked"/>
                     <Separator/>
-                    <MenuItem x:Name="btn_menu_file_close" Header="Close" Click="MenuItemClicked"/>
-                    <MenuItem x:Name="btn_menu_file_exit" Header="Exit" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_file_close" Header="Close" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_file_exit" Header="Exit" Click="MenuItemClicked"/>
                 </MenuItem>
-                <MenuItem Header="Edit">
-                    <MenuItem x:Name="btn_menu_edit_discard_changes" Header="Discard Changes" Click="MenuItemClicked"/>
+                <MenuItem x:Name="mi_menu_edit" Header="Edit">
+                    <MenuItem x:Name="mi_menu_edit_discard_changes" Header="Discard Changes" InputGestureText="Ctrl+Delete" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_edit_run_studio" Header="Run Studio" InputGestureText="Ctrl+R" Click="MenuItemClicked"/>
                 </MenuItem>
-                <MenuItem Header="Build">
-                    <MenuItem x:Name="btn_menu_build_build_project" Header="Build Project" Click="MenuItemClicked"/>
-                    <MenuItem x:Name="btn_menu_build_clean_project" Header="Clean Project" Click="MenuItemClicked"/>
+                <MenuItem x:Name="mi_menu_build" Header="Build">
+                    <MenuItem x:Name="mi_menu_build_build_project" Header="Build Project" InputGestureText="Ctrl+B" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_build_clean_project" Header="Clean Project" Click="MenuItemClicked"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
-        
+
+        <TabControl Grid.Row="1" TabStripPlacement="Bottom">
+            <TabItem Header="Sample Project">
+                <TabControl TabStripPlacement="Left">
+                    <TabItem Header="General">
+                        <Grid/>
+                    </TabItem>
+                    <TabItem Header="Build">
+                        <Grid Margin="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Name="_customBuildPath" Content="Custom Build Path" Margin="0, 0, 20, 0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                            <TextBox Grid.Column="1" IsEnabled="{Binding ElementName=_customBuildPath,Path=IsChecked}" VerticalAlignment="Top"/>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Advanced">
+                        <Grid/>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="game.cfg">
+                <Grid/>
+            </TabItem>
+            <TabItem Header="objects.cfg">
+                <Grid/>
+            </TabItem>
+            <TabItem Header="terrain.blk">
+                <Grid/>
+            </TabItem>
+            <TabItem Header="terrain.tga">
+                <Grid/>
+            </TabItem>
+            <TabItem Header="types.cfg">
+                <Grid/>
+            </TabItem>
+        </TabControl>
+        <TabControl Grid.Row="1" Grid.Column="1" TabStripPlacement="Bottom">
+            <TabItem Header="File Explorer">
+                <Grid/>
+            </TabItem>
+            <TabItem Header="Properties">
+                <Grid/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

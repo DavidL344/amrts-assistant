@@ -20,15 +20,20 @@ namespace amrts_map
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(string projectPath = null)
         {
             InitializeComponent();
             this.KeyDown += new KeyEventHandler(this.ActionListener);
+
+            if (projectPath == null)
+            {
+                mi_menu_build_build_project.IsEnabled = false;
+            }
         }
 
         private void MenuItemClicked(object sender, RoutedEventArgs e)
         {
-            string menuItemName = (sender as FrameworkElement).Name.ToString().Split(new string[] { "btn_menu_" }, StringSplitOptions.RemoveEmptyEntries)[0];
+            string menuItemName = (sender as FrameworkElement).Name.ToString().Split(new string[] { "mi_menu_" }, StringSplitOptions.RemoveEmptyEntries)[0];
             PerformAction(menuItemName);
         }
 
@@ -36,27 +41,31 @@ namespace amrts_map
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
+                string action;
                 switch (e.Key)
                 {
                     case Key.N:
-                        PerformAction("file_new");
+                        action = "file_new";
                         break;
                     case Key.O:
-                        PerformAction("file_open");
+                        action = "file_open";
                         break;
                     case Key.S:
-                        string action = (Keyboard.IsKeyDown(Key.LeftShift)) ? "file_save_as" : "file_save";
-                        PerformAction(action);
+                        action = (Keyboard.IsKeyDown(Key.LeftShift)) ? "file_save_as" : "file_save";
                         break;
                     case Key.I:
-                        PerformAction("file_import");
+                        action = "file_import";
                         break;
                     case Key.E:
-                        PerformAction("file_export");
+                        action = "file_export";
+                        break;
+                    case Key.R:
+                        action = "edit_run_studio";
                         break;
                     default:
-                        break;
+                        return;
                 }
+                PerformAction(action);
             }
         }
 
@@ -71,6 +80,7 @@ namespace amrts_map
                 case "file_import":
                 case "file_export":
                 case "edit_discard_changes":
+                case "edit_run_studio":
                 case "build_build_project":
                 case "build_clean_project":
                     MessageBox.Show("Coming Soon!", Title, MessageBoxButton.OK, MessageBoxImage.Information);
