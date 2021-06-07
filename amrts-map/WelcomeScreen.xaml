@@ -21,7 +21,7 @@
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Map Assistant for Army Men RTS" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold"/>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Open recent" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,0,0,0"/>
 
-        <ListBox Grid.Row="2" Grid.Column="0" Margin="5, 5, 5, 40" SelectionChanged="ListBox_SelectionChanged" Name="lb_recent">
+        <ListBox Grid.Row="2" Grid.Column="0" Margin="5, 5, 5, 40" Name="lb_recent" MouseLeftButtonUp="lb_recent_MouseLeftButtonUp" KeyDown="lb_recent_KeyDown">
             <ListBox.Items>
                 <!--<ListBoxItem Content="Sample Project"/>-->
             </ListBox.Items>

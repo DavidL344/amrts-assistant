@@ -36,13 +36,23 @@ namespace amrts_map
             foreach (string[] value in RecentlyOpenedFiles) lb_recent.Items.Add(String.Format("{0}\r\n{1}{2}", value[0], "          ", value[1]));
         }
 
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ShowSampleRecentsInfo()
         {
             if (lb_recent.SelectedIndex == -1) return;
             string selectedItem = (string)lb_recent.SelectedItem;
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
             MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
+        }
+
+        private void lb_recent_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ShowSampleRecentsInfo();
+        }
+
+        private void lb_recent_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.Enter)) ShowSampleRecentsInfo();
         }
 
         private void ButtonClicked(object sender, RoutedEventArgs e)
