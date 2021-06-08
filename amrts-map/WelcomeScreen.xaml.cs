@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace amrts_map
 {
@@ -38,7 +41,7 @@ namespace amrts_map
 
         private void ShowSampleRecentsInfo()
         {
-            if (lb_recent.SelectedIndex == -1) return;
+            if (lb_recent.SelectedIndex == -1 || Keyboard.IsKeyDown(Key.Escape)) return;
             string selectedItem = (string)lb_recent.SelectedItem;
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
@@ -71,9 +74,28 @@ namespace amrts_map
             switch (action.ToLower())
             {
                 case "new":
-                case "open":
-                case "import":
                     MessageBox.Show("Coming Soon!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "open":
+                    OpenFileDialog openProjectDialog = FileDialog("Open a project", "Map Project|*.amramp");
+                    if (openProjectDialog != null)
+                    {
+                        string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
+                        MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    break;
+                case "import":
+                    OpenFileDialog importFileDialog = FileDialog("Import a map", "Army Men RTS Map File|*.x");
+                    if (importFileDialog != null)
+                    {
+                        string additionalFile = "(not detected)";
+                        if (File.Exists(Path.ChangeExtension(importFileDialog.FileName, ".x-e")))
+                        {
+                            additionalFile = Path.ChangeExtension(importFileDialog.FileName, ".x-e");
+                        }
+                        string info = String.Format("Selected file: {0}\r\nAdditional file: {1}", importFileDialog.FileName, additionalFile);
+                        MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                     break;
                 case "empty":
                     MainWindow mainWindow = new MainWindow();
@@ -84,6 +106,21 @@ namespace amrts_map
                 default:
                     break;
             }
+        }
+
+        private OpenFileDialog FileDialog(string title = "Open file", string filter = "All Supported Files|*.amramp;*.x")
+        {
+            OpenFileDialog openFile = new OpenFileDialog
+            {
+                Title = title,
+                Filter = filter,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                DereferenceLinks = true
+            };
+
+            if (openFile.ShowDialog() == true) return openFile;
+            return null;
         }
     }
 }
