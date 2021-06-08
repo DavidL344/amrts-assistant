@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,13 +22,17 @@ namespace amrts_map
     public partial class MainWindow : Window
     {
         public bool IsProjectOpened = false;
+        public string ProjectPath;
         private TabControl mainTabControl;
 
         public MainWindow(string projectPath = null)
         {
             InitializeComponent();
             this.KeyDown += new KeyEventHandler(this.ActionListener);
-            if (projectPath == null) ProjectLoaded(false);
+            this.ProjectPath = projectPath;
+
+            // A temporary solution only - the app should always check if the path exists or not
+            ProjectLoaded(this.ProjectPath != null);
         }
 
         private void MenuItemClicked(object sender, RoutedEventArgs e)
@@ -41,6 +46,14 @@ namespace amrts_map
             mi_menu_file_save.IsEnabled = mi_menu_file_save_as.IsEnabled = mi_menu_file_export.IsEnabled = loaded;
             mi_menu_edit_discard_changes.IsEnabled = mi_menu_edit_run_studio.IsEnabled = loaded;
             mi_menu_build_build_project.IsEnabled = mi_menu_build_clean_project.IsEnabled = loaded;
+
+            if (loaded)
+            {
+                this.Title = String.Format("{0} | {1}", ProjectPath, "Map Assistant for Army Men RTS");
+            } else {
+                this.Title = "Map Assistant for Army Men RTS";
+            }
+            IsProjectOpened = loaded;
         }
 
         public void ActionListener(object sender, KeyEventArgs e)

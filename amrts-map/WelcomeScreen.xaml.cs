@@ -41,11 +41,13 @@ namespace amrts_map
 
         private void ShowSampleRecentsInfo()
         {
-            if (lb_recent.SelectedIndex == -1 || Keyboard.IsKeyDown(Key.Escape)) return;
+            if (Keyboard.IsKeyDown(Key.Escape)) lb_recent.SelectedIndex = -1;
+            if (lb_recent.SelectedIndex == -1) return;
             string selectedItem = (string)lb_recent.SelectedItem;
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
             MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
+            OpenMainWindow(selectedItemArray[1].Trim());
         }
 
         private void lb_recent_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -71,23 +73,6 @@ namespace amrts_map
                     PerformAction(buttonName);
                 }
             }
-
-            /*
-            if (buttonName.StartsWith("start_"))
-            {
-                buttonName = buttonName.Split(new string[] { "start_" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                PerformAction(buttonName);
-                return;
-            }
-            if (buttonName.StartsWith("project_"))
-            {
-                MessageBox.Show(buttonName);
-                buttonName = buttonName.Split(new string[] { "project_" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                MessageBox.Show(buttonName);
-                PerformAction(buttonName);
-                return;
-            }
-            */
         }
 
         private void PerformAction(string action)
@@ -110,6 +95,7 @@ namespace amrts_map
                     {
                         string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
                         MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                        OpenMainWindow(openProjectDialog.FileName);
                     }
                     break;
                 case "import":
@@ -123,13 +109,11 @@ namespace amrts_map
                         }
                         string info = String.Format("Selected file: {0}\r\nAdditional file: {1}", importFileDialog.FileName, additionalFile);
                         MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                        OpenMainWindow(importFileDialog.FileName);
                     }
                     break;
                 case "empty":
-                    MainWindow mainWindow = new MainWindow();
-                    this.Hide();
-                    mainWindow.ShowDialog();
-                    this.Show();
+                    OpenMainWindow();
                     break;
                 default:
                     break;
@@ -174,6 +158,20 @@ namespace amrts_map
                 default:
                     break;
             }
+        }
+
+        private void OpenMainWindow(string projectPath = null)
+        {
+            lb_recent.SelectedIndex = -1; // Reset the selected recent file (if applicable)
+            if (projectPath != null && !File.Exists(projectPath))
+            {
+                MessageBox.Show("The file doesn't exist!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            MainWindow mainWindow = new MainWindow(projectPath);
+            this.Hide();
+            mainWindow.ShowDialog();
+            this.Show();
         }
     }
 }
