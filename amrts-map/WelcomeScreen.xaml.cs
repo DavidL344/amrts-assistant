@@ -61,12 +61,33 @@ namespace amrts_map
         private void ButtonClicked(object sender, RoutedEventArgs e)
         {
             string buttonName = (sender as Button).Name.ToString().Split(new string[] { "btn_" }, StringSplitOptions.RemoveEmptyEntries)[0];
+            string[] buttonNameTypes = new string[] { "start_", "project_" };
+
+            foreach (string buttonNameType in buttonNameTypes)
+            {
+                if (buttonName.StartsWith(buttonNameType))
+                {
+                    buttonName = buttonName.Split(new string[] { buttonNameType }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    PerformAction(buttonName);
+                }
+            }
+
+            /*
             if (buttonName.StartsWith("start_"))
             {
                 buttonName = buttonName.Split(new string[] { "start_" }, StringSplitOptions.RemoveEmptyEntries)[0];
                 PerformAction(buttonName);
                 return;
             }
+            if (buttonName.StartsWith("project_"))
+            {
+                MessageBox.Show(buttonName);
+                buttonName = buttonName.Split(new string[] { "project_" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                MessageBox.Show(buttonName);
+                PerformAction(buttonName);
+                return;
+            }
+            */
         }
 
         private void PerformAction(string action)
@@ -74,6 +95,13 @@ namespace amrts_map
             switch (action.ToLower())
             {
                 case "new":
+                case "new_back":
+                    if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = "ArmyMenMap1";
+                    if (string.IsNullOrWhiteSpace(txt_project_location.Text))
+                        txt_project_location.Text = Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents\Projects");
+                    SwitchUI();
+                    break;
+                case "new_create":
                     MessageBox.Show("Coming Soon!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "open":
@@ -121,6 +149,31 @@ namespace amrts_map
 
             if (openFile.ShowDialog() == true) return openFile;
             return null;
+        }
+
+        private void SwitchUI(string type = null)
+        {
+            switch (type)
+            {
+                case null:
+                    if (grid_main.Visibility == Visibility.Visible)
+                    {
+                        SwitchUI("project_new");
+                        return;
+                    }
+                    SwitchUI("main");
+                    break;
+                case "main":
+                    grid_project_new.Visibility = Visibility.Hidden;
+                    grid_main.Visibility = Visibility.Visible;
+                    break;
+                case "project_new":
+                    grid_main.Visibility = Visibility.Hidden;
+                    grid_project_new.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

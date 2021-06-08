@@ -7,38 +7,69 @@
         xmlns:local="clr-namespace:amrts_map"
         mc:Ignorable="d"
         ui:WindowHelper.UseModernWindowStyle="True" Height="450" Width="850" MinHeight="450" MinWidth="850">
-    <Grid AllowDrop="True" Margin="40,10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Map Assistant for Army Men RTS" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Open recent" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,0,0,0"/>
-
-        <ListBox Grid.Row="2" Grid.Column="0" Margin="5, 5, 5, 40" Name="lb_recent" MouseLeftButtonUp="lb_recent_MouseLeftButtonUp" KeyDown="lb_recent_KeyDown">
-            <ListBox.Items>
-                <!--<ListBoxItem Content="Sample Project"/>-->
-            </ListBox.Items>
-        </ListBox>
-
-        <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center">
+    <Grid Margin="40,10">
+        <Grid x:Name="grid_main" AllowDrop="True" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Get started" FontSize="20" VerticalAlignment="Bottom" Margin="5,0"/>
-            <Button x:Name="btn_start_new" Grid.Row="1" Content="Create a new project" Margin="5,10" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
-            <Button x:Name="btn_start_open" Grid.Row="1" Content="Open a project" Margin="5,45" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
-            <Button x:Name="btn_start_import" Grid.Row="1" Content="Import a map" Margin="5,80" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
-            <Separator Grid.Row="1" Margin="5,115" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
-            <!--<ui:HyperlinkButton Grid.Row="2" Grid.Column="1" Content="" Margin="0,110" HorizontalAlignment="Center" VerticalAlignment="Top" Height="33" Grid.RowSpan="2"/>-->
-            <Button x:Name="btn_start_empty" Grid.Row="1" Content="Continue without opening a map" Margin="5,120" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Map Assistant for Army Men RTS" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Open recent" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+
+            <ListBox Grid.Row="2" Grid.Column="0" Margin="5, 5, 5, 40" Name="lb_recent" MouseLeftButtonUp="lb_recent_MouseLeftButtonUp" KeyDown="lb_recent_KeyDown">
+                <ListBox.Items>
+                    <!--<ListBoxItem Content="Sample Project"/>-->
+                </ListBox.Items>
+            </ListBox>
+
+            <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Get started" FontSize="20" VerticalAlignment="Bottom" Margin="5,0"/>
+                <Button x:Name="btn_start_new" Grid.Row="1" Content="Create a new project" Margin="5,10" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
+                <Button x:Name="btn_start_open" Grid.Row="1" Content="Open a project" Margin="5,45" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
+                <Button x:Name="btn_start_import" Grid.Row="1" Content="Import a map" Margin="5,80" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
+                <Separator Grid.Row="1" Margin="5,115" VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+                <!--<ui:HyperlinkButton Grid.Row="2" Grid.Column="1" Content="" Margin="0,110" HorizontalAlignment="Center" VerticalAlignment="Top" Height="33" Grid.RowSpan="2"/>-->
+                <Button x:Name="btn_start_empty" Grid.Row="1" Content="Continue without opening a map" Margin="5,120" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="ButtonClicked"/>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="grid_project_new" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Create a new project" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" Text="Army Men RTS Map" FontSize="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+            
+            <TextBlock Grid.Row="2" Text="Project name" Margin="5,10,0,0"/>
+            <TextBox x:Name="txt_project_name" Grid.Row="3" Height="10" Margin="5"/>
+            <TextBlock Grid.Row="4" Text="Project location" Margin="5,5,0,0"/>
+            <TextBox x:Name="txt_project_location" Grid.Row="5" Height="10" Margin="5"/>
+            <Button Grid.Row="5" Grid.Column="1" Content="..."/>
+            <Button x:Name="btn_project_new_back" Grid.Row="6" Grid.Column="2" Content="Back" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" Click="ButtonClicked"/>
+            <Button x:Name="btn_project_new_create" Grid.Row="6" Grid.Column="3" Content="Create" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" Click="ButtonClicked"/>
         </Grid>
     </Grid>
 </Window>
