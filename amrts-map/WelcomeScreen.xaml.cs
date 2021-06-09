@@ -81,6 +81,7 @@ namespace amrts_map
                 {
                     buttonName = buttonName.Split(new string[] { buttonNameType }, StringSplitOptions.RemoveEmptyEntries)[0];
                     PerformAction(buttonName);
+                    break;
                 }
             }
         }
@@ -92,9 +93,19 @@ namespace amrts_map
                 case "new":
                 case "new_back":
                     if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = "ArmyMenMap1";
-                    if (string.IsNullOrWhiteSpace(txt_project_location.Text))
-                        txt_project_location.Text = Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents\Projects");
+                    if (string.IsNullOrWhiteSpace(txt_project_new_location.Text))
+                        txt_project_new_location.Text = Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents\Projects");
+                    if (string.IsNullOrWhiteSpace(txt_project_new_map_location.Text))
+                        txt_project_new_map_location.Text = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\3DO\Army Men RTS\missions\mp\8ally.x");
                     SwitchUI();
+                    break;
+                case "new_location_browse":
+                    SaveFileDialog projectLocation = SaveDialog("Browse", "Map Project|*.amramp");
+                    if (projectLocation != null) txt_project_new_location.Text = projectLocation.FileName;
+                    break;
+                case "new_map_location_browse":
+                    OpenFileDialog mapLocation = FileDialog("Select a map", "Army Men RTS Map File|*.x");
+                    if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
                     break;
                 case "new_create":
                     MessageBox.Show("Coming Soon!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -157,6 +168,19 @@ namespace amrts_map
             };
 
             if (openFile.ShowDialog() == true) return openFile;
+            return null;
+        }
+
+        private SaveFileDialog SaveDialog(string title = "Save file", string filter = "All Supported Files|*.amramp;*.x")
+        {
+            SaveFileDialog saveFile = new SaveFileDialog
+            {
+                Title = title,
+                Filter = filter,
+                CheckPathExists = true,
+                DereferenceLinks = true
+            };
+            if (saveFile.ShowDialog() == true) return saveFile;
             return null;
         }
 

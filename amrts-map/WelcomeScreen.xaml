@@ -57,6 +57,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -65,11 +67,17 @@
             
             <TextBlock Grid.Row="2" Text="Project name" Margin="5,10,0,0"/>
             <TextBox x:Name="txt_project_name" Grid.Row="3" Height="10" Margin="5"/>
+            
             <TextBlock Grid.Row="4" Text="Project location" Margin="5,5,0,0"/>
-            <TextBox x:Name="txt_project_location" Grid.Row="5" Height="10" Margin="5"/>
-            <Button Grid.Row="5" Grid.Column="1" Content="..."/>
-            <Button x:Name="btn_project_new_back" Grid.Row="6" Grid.Column="2" Content="Back" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" Click="ButtonClicked"/>
-            <Button x:Name="btn_project_new_create" Grid.Row="6" Grid.Column="3" Content="Create" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" Click="ButtonClicked"/>
+            <TextBox x:Name="txt_project_new_location" Grid.Row="5" Height="10" Margin="5"/>
+            <Button x:Name="btn_project_new_location_browse" Grid.Row="5" Grid.Column="1" Content="..." Click="ButtonClicked"/>
+
+            <TextBlock Grid.Row="6" Text="Map location" Margin="5,5,0,0"/>
+            <TextBox x:Name="txt_project_new_map_location" Grid.Row="7" Height="10" Margin="5"/>
+            <Button x:Name="btn_project_new_map_location_browse" Grid.Row="7" Grid.Column="1" Content="..." Click="ButtonClicked"/>
+
+            <Button x:Name="btn_project_new_back" Grid.Row="8" Grid.Column="2" Content="Back" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" Click="ButtonClicked"/>
+            <Button x:Name="btn_project_new_create" Grid.Row="8" Grid.Column="3" Content="Create" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" Click="ButtonClicked"/>
         </Grid>
     </Grid>
 </Window>
