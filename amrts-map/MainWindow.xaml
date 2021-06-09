@@ -48,7 +48,7 @@
         </DockPanel>
 
         <TabControl Grid.Row="1" TabStripPlacement="Bottom" Loaded="TabControl_Loaded">
-            <TabItem Header="Sample Project">
+            <TabItem x:Name="ti_projectName" Header="Sample Project">
                 <TabControl TabStripPlacement="Left">
                     <TabItem Header="General">
                         <Grid Margin="20">

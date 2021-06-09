@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace amrts_map
 {
@@ -23,16 +24,15 @@ namespace amrts_map
     {
         public bool IsProjectOpened = false;
         public string ProjectPath;
+        private OpenedProject OpenedProject;
         private TabControl mainTabControl;
 
-        public MainWindow(string projectPath = null)
+        public MainWindow(OpenedProject openedProject)
         {
             InitializeComponent();
             this.KeyDown += new KeyEventHandler(this.ActionListener);
-            this.ProjectPath = projectPath;
-
-            // A temporary solution only - the app should always check if the path exists or not
-            ProjectLoaded(this.ProjectPath != null);
+            this.OpenedProject = openedProject;
+            ProjectLoaded(OpenedProject.Initialized);
         }
 
         private void MenuItemClicked(object sender, RoutedEventArgs e)
@@ -47,9 +47,10 @@ namespace amrts_map
             mi_menu_edit_discard_changes.IsEnabled = mi_menu_edit_run_studio.IsEnabled = loaded;
             mi_menu_build_build_project.IsEnabled = mi_menu_build_clean_project.IsEnabled = loaded;
 
-            if (loaded)
+            if (OpenedProject.Project["Name"] != null)
             {
-                this.Title = String.Format("{0} | {1}", ProjectPath, "Map Assistant for Army Men RTS");
+                this.Title = String.Format("{0} | {1}", OpenedProject.Project["Name"], "Map Assistant for Army Men RTS");
+                ti_projectName.Header = OpenedProject.Project["Name"];
             } else {
                 this.Title = "Map Assistant for Army Men RTS";
             }

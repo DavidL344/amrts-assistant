@@ -47,7 +47,17 @@ namespace amrts_map
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
             MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
-            OpenMainWindow(selectedItemArray[1].Trim());
+
+            OpenedProject recentProject = new OpenedProject();
+            try
+            {
+                recentProject.Open(selectedItemArray[1].Trim());
+                OpenMainWindow(recentProject);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void lb_recent_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -95,7 +105,17 @@ namespace amrts_map
                     {
                         string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
                         MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
-                        OpenMainWindow(openProjectDialog.FileName);
+
+                        OpenedProject selectedProject = new OpenedProject();
+                        try
+                        {
+                            selectedProject.Open(openProjectDialog.FileName);
+                            OpenMainWindow(selectedProject);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     break;
                 case "import":
@@ -109,7 +129,12 @@ namespace amrts_map
                         }
                         string info = String.Format("Selected file: {0}\r\nAdditional file: {1}", importFileDialog.FileName, additionalFile);
                         MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
-                        OpenMainWindow(importFileDialog.FileName);
+
+                        OpenedProject importedProject = new OpenedProject();
+                        importedProject.Open(importFileDialog.FileName);
+                        importedProject.Project["Name"] = Path.GetFileName(importFileDialog.FileName);
+                        importedProject.Project["Path"] = null;
+                        OpenMainWindow(importedProject);
                     }
                     break;
                 case "empty":
@@ -160,18 +185,28 @@ namespace amrts_map
             }
         }
 
-        private void OpenMainWindow(string projectPath = null)
+        private void OpenMainWindow(OpenedProject openedProject = null)
         {
             lb_recent.SelectedIndex = -1; // Reset the selected recent file (if applicable)
-            if (projectPath != null && !File.Exists(projectPath))
+
+            try
             {
-                MessageBox.Show("The file doesn't exist!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                if (openedProject == null) openedProject = new OpenedProject();
+                if (openedProject.Initialized && openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
+                {
+                    MessageBox.Show("The file doesn't exist!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                MainWindow mainWindow = new MainWindow(openedProject);
+                this.Hide();
+                mainWindow.ShowDialog();
+                this.Show();
             }
-            MainWindow mainWindow = new MainWindow(projectPath);
-            this.Hide();
-            mainWindow.ShowDialog();
-            this.Show();
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
