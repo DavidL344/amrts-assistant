@@ -109,7 +109,16 @@ namespace amrts_map
                     if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
                     break;
                 case "new_create":
-                    MessageBox.Show("Coming Soon!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                    OpenedProject openedProject = new OpenedProject();
+                    try
+                    {
+                        openedProject.New(txt_project_name.Text, txt_project_new_location.Text, txt_project_new_map_location.Text);
+                        OpenMainWindow(openedProject);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                     break;
                 case "open":
                     OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", "Map Project|*.amramp");
@@ -185,7 +194,6 @@ namespace amrts_map
         private void OpenMainWindow(OpenedProject openedProject = null)
         {
             lb_recent.SelectedIndex = -1; // Reset the selected recent file (if applicable)
-
             try
             {
                 if (openedProject == null) openedProject = new OpenedProject();
@@ -197,6 +205,12 @@ namespace amrts_map
 
                 MainWindow mainWindow = new MainWindow(openedProject);
                 this.Hide();
+
+                txt_project_name.Text = null;
+                txt_project_new_location.Text = null;
+                txt_project_new_map_location.Text = null;
+                SwitchUI("main");
+
                 mainWindow.ShowDialog();
                 this.Show();
             }

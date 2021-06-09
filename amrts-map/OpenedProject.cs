@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace amrts_map
 {
@@ -26,10 +27,11 @@ namespace amrts_map
         public void New(string name = null, string projectPath = null, string mapFilePath = null)
         {
             if (name == null || projectPath == null || mapFilePath == null) return;
-            if (Directory.Exists(projectPath)) throw new IOException("The directory already exists!");
+            string projectRoot = (projectPath != null ) ? Path.Combine(projectPath, name) : null;
+            if (Directory.Exists(projectRoot)) throw new IOException("The directory already exists! " + projectRoot);
 
             Project["Name"] = name;
-            Project["Path"] = projectPath;
+            Project["Path"] = String.Format(@"{0}\{1}.amramp", projectRoot, name);
             Map["Name"] = null;
             Map["x"] = null;
             Map["x-e"] = null;
@@ -38,21 +40,21 @@ namespace amrts_map
             PathVars["Edit"] = null;
             PathVars["Export"] = null;
 
-            if (projectPath != null)
+            if (projectRoot != null)
             {
-                string projectRoot = Path.GetDirectoryName(projectPath);
+                PathVars["Root"] = Path.GetFullPath(projectRoot);
+                PathVars["Cache"] = String.Format(@"{0}\{1}\", projectRoot, "cache");
+                PathVars["Edit"] = String.Format(@"{0}\{1}\", projectRoot, "edit");
+                PathVars["Export"] = String.Format(@"{0}\{1}\", projectRoot, "export");
                 try
                 {
-                    Directory.CreateDirectory(projectRoot);
+                    foreach (KeyValuePair<string, string> entry in PathVars) Directory.CreateDirectory(entry.Value);
+                    File.WriteAllLines(Project["Path"], new string[] { "TODO: Save information here" });
                 }
                 catch (Exception e)
                 {
                     throw new Exception(e.Message);
                 }
-                PathVars["Root"] = projectRoot;
-                PathVars["Cache"] = Path.Combine(projectRoot, "/cache/");
-                PathVars["Edit"] = Path.Combine(projectRoot, "/edit/");
-                PathVars["Export"] = Path.Combine(projectRoot, "/export/");
             }
 
             // The map path isn't specified when the user creates a project without importing a map
@@ -61,11 +63,11 @@ namespace amrts_map
                 if (!File.Exists(mapFilePath)) throw new FileNotFoundException("The map file doesn't exist!");
                 string mapExtensionFilePath = Path.ChangeExtension(mapFilePath, ".x-e");
                 Map["Name"] = Path.GetFileNameWithoutExtension(mapFilePath);
-                Map["x"] = Path.Combine(Project["Root"], "/cache/", Path.GetFileName(mapFilePath));
-                if (File.Exists(mapExtensionFilePath)) Map["x-e"] = Path.ChangeExtension(Map["x"], ".x-e");
+                Map["x"] = Path.Combine(PathVars["Cache"], Path.GetFileName(mapFilePath));
+                Map["x-e"] = File.Exists(mapExtensionFilePath) ? Path.ChangeExtension(Map["x"], ".x-e") : null;
 
                 File.Copy(mapFilePath, Map["x"]);
-                if (Map["x-e"] != null) File.Copy(mapFilePath, Map["x-e"]);
+                if (Map["x-e"] != null) File.Copy(mapExtensionFilePath, Map["x-e"]);
                 Initialized = true;
             }
         }
