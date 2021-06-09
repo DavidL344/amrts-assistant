@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
+using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 
 namespace amrts_map
 {
@@ -100,18 +101,18 @@ namespace amrts_map
                     SwitchUI();
                     break;
                 case "new_location_browse":
-                    SaveFileDialog projectLocation = SaveDialog("Browse", "Map Project|*.amramp");
-                    if (projectLocation != null) txt_project_new_location.Text = projectLocation.FileName;
+                    FolderBrowserDialog projectLocation = Dialog.BrowseFolder();
+                    if (projectLocation != null) txt_project_new_location.Text = projectLocation.SelectedPath;
                     break;
                 case "new_map_location_browse":
-                    OpenFileDialog mapLocation = FileDialog("Select a map", "Army Men RTS Map File|*.x");
+                    OpenFileDialog mapLocation = Dialog.OpenFile("Select a map", "Army Men RTS Map File|*.x");
                     if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
                     break;
                 case "new_create":
                     MessageBox.Show("Coming Soon!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "open":
-                    OpenFileDialog openProjectDialog = FileDialog("Open a project", "Map Project|*.amramp");
+                    OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", "Map Project|*.amramp");
                     if (openProjectDialog != null)
                     {
                         string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
@@ -130,7 +131,7 @@ namespace amrts_map
                     }
                     break;
                 case "import":
-                    OpenFileDialog importFileDialog = FileDialog("Import a map", "Army Men RTS Map File|*.x");
+                    OpenFileDialog importFileDialog = Dialog.OpenFile("Import a map", "Army Men RTS Map File|*.x");
                     if (importFileDialog != null)
                     {
                         string additionalFile = "(not detected)";
@@ -154,34 +155,6 @@ namespace amrts_map
                 default:
                     break;
             }
-        }
-
-        private OpenFileDialog FileDialog(string title = "Open file", string filter = "All Supported Files|*.amramp;*.x")
-        {
-            OpenFileDialog openFile = new OpenFileDialog
-            {
-                Title = title,
-                Filter = filter,
-                CheckFileExists = true,
-                CheckPathExists = true,
-                DereferenceLinks = true
-            };
-
-            if (openFile.ShowDialog() == true) return openFile;
-            return null;
-        }
-
-        private SaveFileDialog SaveDialog(string title = "Save file", string filter = "All Supported Files|*.amramp;*.x")
-        {
-            SaveFileDialog saveFile = new SaveFileDialog
-            {
-                Title = title,
-                Filter = filter,
-                CheckPathExists = true,
-                DereferenceLinks = true
-            };
-            if (saveFile.ShowDialog() == true) return saveFile;
-            return null;
         }
 
         private void SwitchUI(string type = null)

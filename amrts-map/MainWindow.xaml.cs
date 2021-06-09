@@ -22,7 +22,6 @@ namespace amrts_map
     /// </summary>
     public partial class MainWindow : Window
     {
-        public bool IsProjectOpened = false;
         public string ProjectPath;
         private OpenedProject OpenedProject;
         private TabControl mainTabControl;
@@ -54,7 +53,6 @@ namespace amrts_map
             } else {
                 this.Title = "Map Assistant for Army Men RTS";
             }
-            IsProjectOpened = loaded;
         }
 
         public void ActionListener(object sender, KeyEventArgs e)
@@ -97,7 +95,7 @@ namespace amrts_map
 
         public void PerformAction(string action)
         {
-            if (!IsProjectOpened)
+            if (!OpenedProject.Initialized)
             {
                 switch (action.ToLower())
                 {
