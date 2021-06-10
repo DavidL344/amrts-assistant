@@ -45,6 +45,7 @@ namespace amrts_map
             mi_menu_file_save.IsEnabled = mi_menu_file_save_as.IsEnabled = mi_menu_file_export.IsEnabled = loaded;
             mi_menu_edit_discard_changes.IsEnabled = mi_menu_edit_run_studio.IsEnabled = loaded;
             mi_menu_build_build_project.IsEnabled = mi_menu_build_clean_project.IsEnabled = loaded;
+            tc_main.Visibility = loaded ? Visibility.Visible : Visibility.Hidden;
 
             if (OpenedProject.Project["Name"] != null)
             {
@@ -129,6 +130,11 @@ namespace amrts_map
                 case "build_build_project":
                 case "build_clean_project":
                     MessageBox.Show("Coming Soon!", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "help_about":
+                    AboutBox aboutBox = new AboutBox();
+                    aboutBox.Owner = this;
+                    aboutBox.ShowDialog();
                     break;
                 case "file_close":
                     Project.Close(OpenedProject);

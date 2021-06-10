@@ -48,6 +48,9 @@
                     <MenuItem x:Name="mi_menu_build_build_project" Header="Build Project" InputGestureText="Ctrl+B" Click="MenuItemClicked"/>
                     <MenuItem x:Name="mi_menu_build_clean_project" Header="Clean Project" Click="MenuItemClicked"/>
                 </MenuItem>
+                <MenuItem x:Name="mi_menu_help" Header="Help">
+                    <MenuItem x:Name="mi_menu_help_about" Header="About Map Assistant for Army Men RTS" Click="MenuItemClicked"/>
+                </MenuItem>
             </Menu>
         </DockPanel>
 
