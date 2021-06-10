@@ -116,7 +116,11 @@ namespace amrts_map
             {
                 case "file_new":
                 case "file_open":
+                    MessageBox.Show("Coming Soon!", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
                 case "file_save":
+                    Project.Save(OpenedProject);
+                    break;
                 case "file_save_as":
                 case "file_import":
                 case "file_export":
@@ -127,6 +131,7 @@ namespace amrts_map
                     MessageBox.Show("Coming Soon!", Title, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "file_close":
+                    Project.Close(OpenedProject);
                     this.Close();
                     break;
                 case "file_exit":

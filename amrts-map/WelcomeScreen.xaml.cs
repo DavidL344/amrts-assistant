@@ -24,6 +24,8 @@ namespace amrts_map
     public partial class WelcomeScreen : Window
     {
         public List<string[]> RecentlyOpenedFiles = new List<string[]>();
+        public OpenedProject OpenedProject;
+
         public WelcomeScreen()
         {
             InitializeComponent();
@@ -49,11 +51,10 @@ namespace amrts_map
             int selectedIndex = lb_recent.SelectedIndex;
             MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
 
-            OpenedProject recentProject = new OpenedProject();
             try
             {
-                recentProject.Open(selectedItemArray[1].Trim());
-                OpenMainWindow(recentProject);
+                OpenedProject = Project.Open(selectedItemArray[1].Trim());
+                OpenMainWindow(OpenedProject);
             }
             catch (Exception e)
             {
@@ -93,11 +94,11 @@ namespace amrts_map
             {
                 case "new":
                 case "new_back":
-                    if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = "ArmyMenMap1";
+                    if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = Project.DefaultName;
                     if (string.IsNullOrWhiteSpace(txt_project_new_location.Text))
-                        txt_project_new_location.Text = Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents\Projects");
+                        txt_project_new_location.Text = Project.DefaultLocation;
                     if (string.IsNullOrWhiteSpace(txt_project_new_map_location.Text))
-                        txt_project_new_map_location.Text = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\3DO\Army Men RTS\missions\mp\8ally.x");
+                        txt_project_new_map_location.Text = Project.DefaultMapLocation;
                     SwitchUI();
                     break;
                 case "new_location_browse":
@@ -109,11 +110,10 @@ namespace amrts_map
                     if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
                     break;
                 case "new_create":
-                    OpenedProject openedProject = new OpenedProject();
                     try
                     {
-                        openedProject.New(txt_project_name.Text, txt_project_new_location.Text, txt_project_new_map_location.Text);
-                        OpenMainWindow(openedProject);
+                        OpenedProject = Project.New(txt_project_name.Text, txt_project_new_location.Text, txt_project_new_map_location.Text);
+                        OpenMainWindow(OpenedProject);
                     }
                     catch (Exception e)
                     {
@@ -127,11 +127,10 @@ namespace amrts_map
                         string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
                         MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        OpenedProject selectedProject = new OpenedProject();
                         try
                         {
-                            selectedProject.Open(openProjectDialog.FileName);
-                            OpenMainWindow(selectedProject);
+                            OpenedProject = Project.Open(openProjectDialog.FileName);
+                            OpenMainWindow(OpenedProject);
                         }
                         catch (Exception e)
                         {
@@ -151,11 +150,15 @@ namespace amrts_map
                         string info = String.Format("Selected file: {0}\r\nAdditional file: {1}", importFileDialog.FileName, additionalFile);
                         MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        OpenedProject importedProject = new OpenedProject();
-                        importedProject.Open(importFileDialog.FileName);
-                        importedProject.Project["Name"] = Path.GetFileName(importFileDialog.FileName);
-                        importedProject.Project["Path"] = null;
-                        OpenMainWindow(importedProject);
+                        try
+                        {
+                            OpenedProject = Project.OpenMap(importFileDialog.FileName);
+                            OpenMainWindow(OpenedProject);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
                     break;
                 case "empty":
@@ -206,6 +209,7 @@ namespace amrts_map
                 MainWindow mainWindow = new MainWindow(openedProject);
                 this.Hide();
 
+                OpenedProject = null;
                 txt_project_name.Text = null;
                 txt_project_new_location.Text = null;
                 txt_project_new_map_location.Text = null;
