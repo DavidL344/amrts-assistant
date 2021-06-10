@@ -132,9 +132,7 @@ namespace amrts_map
                     MessageBox.Show("Coming Soon!", Title, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "help_about":
-                    AboutBox aboutBox = new AboutBox();
-                    aboutBox.Owner = this;
-                    aboutBox.ShowDialog();
+                    Dialog.About(this);
                     break;
                 case "file_close":
                     Project.Close(OpenedProject);

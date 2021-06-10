@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
@@ -56,6 +57,13 @@ namespace amrts_map
 
             if (browseFolder.ShowDialog() == DialogResult.OK) return browseFolder;
             return null;
+        }
+
+        public static void About(Window owner)
+        {
+            AboutBox aboutBox = new AboutBox();
+            aboutBox.Owner = owner;
+            aboutBox.ShowDialog();
         }
     }
 }
