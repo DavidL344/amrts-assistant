@@ -11,7 +11,7 @@ namespace amrts_map
     [Serializable()]
     public class OpenedProject
     {
-        public Dictionary<string, string> Project = new Dictionary<string, string>();
+        [NonSerialized()] public Dictionary<string, string> Project = new Dictionary<string, string>();
         public Dictionary<string, string> Map = new Dictionary<string, string>();
         public Dictionary<string, string> PathVars = new Dictionary<string, string>();
         [NonSerialized()] public bool Initialized;

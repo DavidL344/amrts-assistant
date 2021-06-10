@@ -65,6 +65,18 @@ namespace amrts_map
             BinaryFormatter formatter = new BinaryFormatter();
             obj = (OpenedProject)formatter.Deserialize(stream);
             stream.Close();
+
+            // Set the values of variables that were not deserialized
+            obj.Project = new Dictionary<string, string>()
+            {
+                { "Name", Path.GetFileNameWithoutExtension(projectPath) },
+                { "Path", projectPath }
+            };
+
+            // Get full path of the files (parts of the serialized object contain relative paths)
+            obj.Map["x"] = Path.Combine(Path.GetDirectoryName(obj.Project["Path"]), obj.Map["x"]);
+            if (obj.Map["x-e"] != null) obj.Map["x-e"] = Path.Combine(Path.GetDirectoryName(obj.Project["Path"]), obj.Map["x-e"]);
+
             obj.Initialized = true;
             return obj;
         }
@@ -86,15 +98,42 @@ namespace amrts_map
         public static void Save(OpenedProject openedProject, string customPath = null)
         {
             if (customPath == null) customPath = openedProject.Project["Path"];
-            Stream stream = File.Open(customPath, FileMode.Create);
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(stream, openedProject);
-            stream.Close();
+
+            // Use relative paths for serialization
+            openedProject.Map["x"] = GetRelativePath(Path.GetDirectoryName(openedProject.Project["Path"] + @"\..\"), openedProject.Map["x"]);
+            if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = GetRelativePath(Path.GetDirectoryName(openedProject.Project["Path"] + @"\..\"), openedProject.Map["x-e"]);
+
+            try
+            {
+                Stream stream = File.Open(customPath, FileMode.Create);
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, openedProject);
+                stream.Close();
+            }
+            finally
+            {
+                // Switch back to absolute paths for the program to use
+                openedProject.Map["x"] = Path.Combine(Path.GetDirectoryName(openedProject.Project["Path"]), openedProject.Map["x"]);
+                if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = Path.Combine(Path.GetDirectoryName(openedProject.Project["Path"]), openedProject.Map["x-e"]);
+            }
         }
 
         public static void Close(OpenedProject openedProject)
         {
             openedProject.Reset();
+        }
+
+
+        // A .NET framework alternative of Path.GetRelativePath() - https://stackoverflow.com/a/51180239
+        public static string GetRelativePath(string relativeTo, string path)
+        {
+            var uri = new Uri(relativeTo);
+            var rel = Uri.UnescapeDataString(uri.MakeRelativeUri(new Uri(path)).ToString()).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            if (rel.Contains(Path.DirectorySeparatorChar.ToString()) == false)
+            {
+                rel = $".{ Path.DirectorySeparatorChar }{ rel }";
+            }
+            return rel;
         }
     }
 }
