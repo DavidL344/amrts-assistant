@@ -64,6 +64,7 @@
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialog.cs" />
+    <Compile Include="InternalMethods.cs" />
     <Compile Include="OpenedProject.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="WelcomeScreen.xaml.cs">

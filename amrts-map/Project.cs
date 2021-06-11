@@ -100,8 +100,8 @@ namespace amrts_map
             if (customPath == null) customPath = openedProject.Project["Path"];
 
             // Use relative paths for serialization
-            openedProject.Map["x"] = GetRelativePath(Path.GetDirectoryName(openedProject.Project["Path"] + @"\..\"), openedProject.Map["x"]);
-            if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = GetRelativePath(Path.GetDirectoryName(openedProject.Project["Path"] + @"\..\"), openedProject.Map["x-e"]);
+            openedProject.Map["x"] = InternalMethods.GetRelativePath(InternalMethods.GetParentDirectory(openedProject.Project["Path"]), openedProject.Map["x"]);
+            if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetRelativePath(InternalMethods.GetParentDirectory(openedProject.Project["Path"]), openedProject.Map["x-e"]);
 
             try
             {
@@ -121,19 +121,6 @@ namespace amrts_map
         public static void Close(OpenedProject openedProject)
         {
             openedProject.Reset();
-        }
-
-
-        // A .NET framework alternative of Path.GetRelativePath() - https://stackoverflow.com/a/51180239
-        public static string GetRelativePath(string relativeTo, string path)
-        {
-            var uri = new Uri(relativeTo);
-            var rel = Uri.UnescapeDataString(uri.MakeRelativeUri(new Uri(path)).ToString()).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            if (rel.Contains(Path.DirectorySeparatorChar.ToString()) == false)
-            {
-                rel = $".{ Path.DirectorySeparatorChar }{ rel }";
-            }
-            return rel;
         }
     }
 }
