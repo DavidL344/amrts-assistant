@@ -89,5 +89,13 @@ namespace amrts_map
                 return Path.Combine(Path.GetDirectoryName(pathToConvert), secondPathToConvert);
             }
         }
+
+        public static void ExtractResource(byte[] resource, string location)
+        {
+            using (FileStream fsDst = new FileStream(location, FileMode.CreateNew, FileAccess.Write))
+            {
+                fsDst.Write(resource, 0, resource.Length);
+            }
+        }
     }
 }

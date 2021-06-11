@@ -27,6 +27,14 @@ namespace amrts_map
                 return String.Format("{0} v{1}", AssemblyTitle, AssemblyVersion);
             }
         }
+        private string LongLine {
+            get
+            {
+                string temp = "";
+                for (int i = 0; i < 126; i++) temp += "-";
+                return temp;
+            }
+        }
 
         public AboutBox()
         {
@@ -35,13 +43,16 @@ namespace amrts_map
 
             List<string[]> licenseList = new List<string[]>
             {
-                new string[] { "app", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE" },
-                new string[] { "ModernWpfUI", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE" }
+                // { <Component Name>, <License URL>, <License Type> }
+                // <License Type> is only applied if there's neither online nor offline license information
+                new string[] { "app", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE", "MIT" },
+                new string[] { "ModernWpfUI", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE", "MIT" },
+                new string[] { "Dark Reign 2 - Pack Utility", null, "MIT" }
             };
 
             foreach (string[] license in licenseList)
             {
-                string licenseData = LoadLicense(license[0], license[1]);
+                string licenseData = LoadLicense(license[0], license[1], license[2]);
 
                 if (licenseData == null) return;
                 TabItem tabItem = new TabItem();
@@ -65,41 +76,47 @@ namespace amrts_map
             }
         }
 
-        public string LoadLicense(string localName = null, string onlineUrl = null)
+        public string LoadLicense(string localName = null, string onlineUrl = null, string alternativeLicenseInfo = null)
         {
+            if (onlineUrl == null) return LoadOfflineLicense(localName, alternativeLicenseInfo).Trim();
             string licenseData = "";
+
             try
             {
                 using (System.Net.WebClient webClient = new System.Net.WebClient()) licenseData = webClient.DownloadString(new Uri(onlineUrl));
             }
             catch (Exception e)
             {
-                byte[] licenseBytes;
-                switch (localName)
-                {
-                    case null:
-                    case "app":
-                        licenseBytes = Properties.Resources.LICENSE;
-                        break;
-                    case "ModernWpfUI":
-                        licenseBytes = Properties.Resources.LICENSE_ModernWpfUI;
-                        break;
-                    default:
-                        return null;
-                }
-                using (MemoryStream stream = new MemoryStream(licenseBytes))
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    licenseData = reader.ReadToEnd();
-                }
-
-                string longLine = "";
-                for (int i = 0; i < 126; i++) longLine += "-";
-                licenseData = String.Format("Warning: This license might not be up-to-date.\r\nReason: {0}\r\nFetching attempted from: {1}\r\n{2}\r\n\r\n{3}", e.Message, onlineUrl, longLine, licenseData.TrimStart());
+                licenseData = LoadOfflineLicense(localName, alternativeLicenseInfo);
+                licenseData = String.Format("Warning: This license might not be up-to-date.\r\nReason: {0}\r\nFetching attempted from: {1}\r\n{2}\r\n\r\n{3}", e.Message, onlineUrl, LongLine, licenseData.TrimStart());
             }
             finally
             {
                 licenseData = licenseData.Trim();
+            }
+            return licenseData;
+        }
+
+        private string LoadOfflineLicense(string localName = null, string alternativeLicenseInfo = null)
+        {
+            byte[] licenseBytes;
+            string licenseData = "";
+            switch (localName)
+            {
+                case null:
+                case "app":
+                    licenseBytes = Properties.Resources.LICENSE;
+                    break;
+                case "ModernWpfUI":
+                    licenseBytes = Properties.Resources.LICENSE_ModernWpfUI;
+                    break;
+                default:
+                    return String.Format("This component is available under the following license: {0} (the direct link to the license couldn't be found)", alternativeLicenseInfo);
+            }
+            using (MemoryStream stream = new MemoryStream(licenseBytes))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                licenseData = reader.ReadToEnd();
             }
             return licenseData;
         }

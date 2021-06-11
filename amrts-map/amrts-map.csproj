@@ -125,5 +125,11 @@
       <Version>0.9.4</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DrPack.Bridge\DrPack.Bridge.csproj">
+      <Project>{18031622-2f41-468f-9ccc-5baded5db7a5}</Project>
+      <Name>DrPack.Bridge</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
