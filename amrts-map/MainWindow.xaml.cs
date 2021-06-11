@@ -122,6 +122,8 @@ namespace amrts_map
                     Project.Save(OpenedProject);
                     break;
                 case "file_save_as":
+                    Project.SaveAs(OpenedProject);
+                    break;
                 case "file_import":
                 case "file_export":
                 case "edit_discard_changes":

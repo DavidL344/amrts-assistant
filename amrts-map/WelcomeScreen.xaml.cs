@@ -106,7 +106,7 @@ namespace amrts_map
                     if (projectLocation != null) txt_project_new_location.Text = projectLocation.SelectedPath;
                     break;
                 case "new_map_location_browse":
-                    OpenFileDialog mapLocation = Dialog.OpenFile("Select a map", "Army Men RTS Map File|*.x");
+                    OpenFileDialog mapLocation = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
                     if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
                     break;
                 case "new_create":
@@ -121,7 +121,7 @@ namespace amrts_map
                     }
                     break;
                 case "open":
-                    OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", "Map Project|*.amramp");
+                    OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
                     if (openProjectDialog != null)
                     {
                         string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
@@ -139,7 +139,7 @@ namespace amrts_map
                     }
                     break;
                 case "import":
-                    OpenFileDialog importFileDialog = Dialog.OpenFile("Import a map", "Army Men RTS Map File|*.x");
+                    OpenFileDialog importFileDialog = Dialog.OpenFile("Import a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
                     if (importFileDialog != null)
                     {
                         string additionalFile = "(not detected)";

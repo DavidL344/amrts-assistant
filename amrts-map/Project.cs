@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 
 namespace amrts_map
 {
@@ -13,7 +14,10 @@ namespace amrts_map
         public static string DefaultName = "ArmyMenMap1";
         public static string DefaultLocation = Environment.ExpandEnvironmentVariables(@"%userprofile%\Documents\Projects");
         public static string DefaultMapLocation = Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\3DO\Army Men RTS\missions\mp\8ally.x");
+        public static string FileTypeName = "Map Project";
         public static string FileExtension = "amramp";
+        public static string MapTypeName = "Army Men RTS Map File";
+        public static string MapExtension = "x";
 
         public static OpenedProject New(string name = null, string projectPath = null, string mapFilePath = null)
         {
@@ -74,8 +78,8 @@ namespace amrts_map
             };
 
             // Get full path of the files (parts of the serialized object contain relative paths)
-            obj.Map["x"] = Path.Combine(Path.GetDirectoryName(obj.Project["Path"]), obj.Map["x"]);
-            if (obj.Map["x-e"] != null) obj.Map["x-e"] = Path.Combine(Path.GetDirectoryName(obj.Project["Path"]), obj.Map["x-e"]);
+            obj.Map["x"] = InternalMethods.GetPath(obj.Project["Path"], obj.Map["x"]);
+            if (obj.Map["x-e"] != null) obj.Map["x-e"] = InternalMethods.GetPath(obj.Project["Path"], obj.Map["x-e"]);
 
             obj.Initialized = true;
             return obj;
@@ -100,8 +104,8 @@ namespace amrts_map
             if (customPath == null) customPath = openedProject.Project["Path"];
 
             // Use relative paths for serialization
-            openedProject.Map["x"] = InternalMethods.GetRelativePath(InternalMethods.GetParentDirectory(openedProject.Project["Path"]), openedProject.Map["x"]);
-            if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetRelativePath(InternalMethods.GetParentDirectory(openedProject.Project["Path"]), openedProject.Map["x-e"]);
+            openedProject.Map["x"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x"], true);
+            if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x-e"], true);
 
             try
             {
@@ -113,9 +117,15 @@ namespace amrts_map
             finally
             {
                 // Switch back to absolute paths for the program to use
-                openedProject.Map["x"] = Path.Combine(Path.GetDirectoryName(openedProject.Project["Path"]), openedProject.Map["x"]);
-                if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = Path.Combine(Path.GetDirectoryName(openedProject.Project["Path"]), openedProject.Map["x-e"]);
+                openedProject.Map["x"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x"]);
+                if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x-e"]);
             }
+        }
+
+        public static void SaveAs(OpenedProject openedProject)
+        {
+            FolderBrowserDialog projectNewLocation = Dialog.BrowseFolder("Save Project As...");
+            if (projectNewLocation != null) InternalMethods.CopyDirectory(InternalMethods.GetParentDirectory(openedProject.Project["Path"]), projectNewLocation.SelectedPath);
         }
 
         public static void Close(OpenedProject openedProject)
