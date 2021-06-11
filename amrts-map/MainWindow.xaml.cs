@@ -47,12 +47,11 @@ namespace amrts_map
             mi_menu_build_build_project.IsEnabled = mi_menu_build_clean_project.IsEnabled = loaded;
             tc_main.Visibility = loaded ? Visibility.Visible : Visibility.Hidden;
 
+            this.Title = InternalMethods.Name;
             if (OpenedProject.Project["Name"] != null)
             {
-                this.Title = String.Format("{0} | {1}", OpenedProject.Project["Name"], "Map Assistant for Army Men RTS");
+                this.Title = String.Format("{0} | {1}", OpenedProject.Project["Name"], this.Title);
                 ti_projectName.Header = OpenedProject.Project["Name"];
-            } else {
-                this.Title = "Map Assistant for Army Men RTS";
             }
         }
 
@@ -117,7 +116,7 @@ namespace amrts_map
             {
                 case "file_new":
                 case "file_open":
-                    MessageBox.Show("Coming Soon!", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "file_save":
                     Project.Save(OpenedProject);
@@ -129,7 +128,7 @@ namespace amrts_map
                 case "edit_run_studio":
                 case "build_build_project":
                 case "build_clean_project":
-                    MessageBox.Show("Coming Soon!", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "help_about":
                     Dialog.About(this);

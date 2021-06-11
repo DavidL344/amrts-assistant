@@ -58,7 +58,7 @@ namespace amrts_map
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -117,7 +117,7 @@ namespace amrts_map
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     break;
                 case "open":
@@ -125,7 +125,7 @@ namespace amrts_map
                     if (openProjectDialog != null)
                     {
                         string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
-                        MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
 
                         try
                         {
@@ -134,7 +134,7 @@ namespace amrts_map
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     break;
@@ -148,7 +148,7 @@ namespace amrts_map
                             additionalFile = Path.ChangeExtension(importFileDialog.FileName, ".x-e");
                         }
                         string info = String.Format("Selected file: {0}\r\nAdditional file: {1}", importFileDialog.FileName, additionalFile);
-                        MessageBox.Show(info, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
 
                         try
                         {
@@ -157,7 +157,7 @@ namespace amrts_map
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                     break;
@@ -202,7 +202,7 @@ namespace amrts_map
                 if (openedProject == null) openedProject = new OpenedProject();
                 if (openedProject.Initialized && openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
                 {
-                    MessageBox.Show("The file doesn't exist!", "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -220,7 +220,7 @@ namespace amrts_map
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Map Assistant for Army Men RTS", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

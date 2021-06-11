@@ -9,6 +9,21 @@ namespace amrts_map
 {
     class InternalMethods
     {
+        public static string Name {
+            get
+            {
+                return AboutBox.AssemblyTitle;
+            }
+        }
+
+        public static string Version
+        {
+            get
+            {
+                return AboutBox.AssemblyVersion;
+            }
+        }
+
         // A .NET framework alternative of Path.GetRelativePath() - https://stackoverflow.com/a/51180239
         public static string GetRelativePath(string relativeTo, string path)
         {
