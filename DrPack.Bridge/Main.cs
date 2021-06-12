@@ -9,10 +9,11 @@ namespace DrPack.Bridge
 {
     public class Main
     {
+        public static string AppDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        public static string ResPath = String.Format("{0}{1}", AppDir, @"\drpack.exe");
+
         public static void Extract(bool force = false)
         {
-            string AppDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            string ResPath = String.Format("{0}{1}", AppDir, @"\drpack.exe");
             if (!File.Exists(ResPath) || force) Resource.Extract(Properties.Resources.drpack, AppDir);
         }
     }
