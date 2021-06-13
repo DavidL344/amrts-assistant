@@ -14,7 +14,7 @@ namespace DrPack.Bridge
 
         public static void Extract(bool force = false)
         {
-            if (!File.Exists(ResPath) || force) Resource.Extract(Properties.Resources.drpack, AppDir);
+            if (!File.Exists(ResPath) || force) Resource.Extract(Properties.Resources.drpack, ResPath);
         }
     }
 }
