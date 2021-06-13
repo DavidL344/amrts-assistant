@@ -59,6 +59,8 @@ namespace amrts_map
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
             if (debug) MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
+            OpenedProject = Project.Open(selectedItemArray[1].Trim());
+            OpenMainWindow(OpenedProject);
         }
 
         private void lb_recent_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
