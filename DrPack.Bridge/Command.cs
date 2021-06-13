@@ -28,9 +28,11 @@ namespace DrPack.Bridge
             }
         }
 
-        public static void Execute(string arguments, bool verify = true)
+        public static string Execute(string arguments, bool verify = true, bool returnConsoleOutput = false)
         {
             if (verify) Verify(arguments);
+            Main.Extract();
+
             ProcessStartInfo processStartInfo = ProcessInfoTemplate;
             processStartInfo.Arguments = arguments;
 
@@ -40,6 +42,9 @@ namespace DrPack.Bridge
 
             if (process.ExitCode != 0) throw new Exception(stdout);
             if (stdout.Contains("Unable")) throw new IOException(stdout);
+
+            if (returnConsoleOutput) return stdout;
+            return null;
         }
 
         public static void Verify(string arguments)
@@ -73,13 +78,13 @@ namespace DrPack.Bridge
                     }
                     if (args.Length < 3 || args.Length > 3 + optionalArgumentCount) throw new ArgumentOutOfRangeException(exceptionText);
 
-                    if (File.Exists(args[1])) throw new WarningException("The map file already exists!");
+                    if (File.Exists(args[1])) throw new WarningException("The archive already exists!");
                     if (!Directory.Exists(args[2])) throw new DirectoryNotFoundException("The directory doesn't exist!");
                     if (!Directory.EnumerateFileSystemEntries(args[2]).Any()) throw new IOException("The directory is empty!");
                     break;
                 case "x":
                     if (args.Length != 3) throw new ArgumentOutOfRangeException(String.Format("Invalid argument length detected!\r\nExpected 3, got {0}.", args.Length));
-                    if (!File.Exists(args[1])) throw new FileNotFoundException("The map file doesn't exist!");
+                    if (!File.Exists(args[1])) throw new FileNotFoundException("The archive doesn't exist!");
                     if (Directory.Exists(args[2]))
                     {
                         // Throw the exception only if the directory isn't empty
@@ -88,7 +93,7 @@ namespace DrPack.Bridge
                     break;
                 case "l":
                     if (args.Length != 2) throw new ArgumentOutOfRangeException(String.Format("Invalid argument length detected!\r\nExpected 2, got {0}.", args.Length));
-                    if (!File.Exists(args[1])) throw new FileNotFoundException("The map file doesn't exist!");
+                    if (!File.Exists(args[1])) throw new FileNotFoundException("The archive doesn't exist!");
                     break;
                 default:
                     throw new ArgumentException("The action is invalid!");
