@@ -28,9 +28,9 @@ namespace DrPack.Bridge
             }
         }
 
-        public static string Execute(string arguments, bool verify = true, bool returnConsoleOutput = false)
+        public static string Execute(string arguments, bool verify = true, bool returnConsoleOutput = false, bool ignoreWarnings = false)
         {
-            if (verify) Verify(arguments);
+            if (verify) Verify(arguments, ignoreWarnings);
             Main.Extract();
 
             ProcessStartInfo processStartInfo = ProcessInfoTemplate;
@@ -47,7 +47,7 @@ namespace DrPack.Bridge
             return null;
         }
 
-        public static void Verify(string arguments)
+        public static void Verify(string arguments, bool ignoreWarnings = false)
         {
             string[] args = arguments.Split(' ');
             if (args.Length < 2 || args.Length > 5) throw new ArgumentOutOfRangeException(String.Format("Invalid argument length detected!\r\nExpected 2-5, got {0}.", args.Length));
@@ -78,7 +78,7 @@ namespace DrPack.Bridge
                     }
                     if (args.Length < 3 || args.Length > 3 + optionalArgumentCount) throw new ArgumentOutOfRangeException(exceptionText);
 
-                    if (File.Exists(args[1])) throw new WarningException("The archive already exists!");
+                    if (File.Exists(args[1]) && !ignoreWarnings) throw new WarningException("The archive already exists!");
                     if (!Directory.Exists(args[2])) throw new DirectoryNotFoundException("The directory doesn't exist!");
                     if (!Directory.EnumerateFileSystemEntries(args[2]).Any()) throw new IOException("The directory is empty!");
                     break;
@@ -88,7 +88,7 @@ namespace DrPack.Bridge
                     if (Directory.Exists(args[2]))
                     {
                         // Throw the exception only if the directory isn't empty
-                        if (Directory.EnumerateFileSystemEntries(args[2]).Any()) throw new WarningException("The directory already exists!");
+                        if (Directory.EnumerateFileSystemEntries(args[2]).Any() && !ignoreWarnings) throw new WarningException("The directory already exists!");
                     }
                     break;
                 case "l":
