@@ -37,13 +37,21 @@ namespace amrts_map
             string mapExtensionFilePath = Path.ChangeExtension(mapFilePath, ".x-e");
             newProject.Map["Name"] = Path.GetFileNameWithoutExtension(mapFilePath);
             newProject.Map["x"] = Path.Combine(newProject.PathVars["Cache"], Path.GetFileName(mapFilePath));
-            if (File.Exists(mapExtensionFilePath)) newProject.Map["x-e"] = Path.ChangeExtension(newProject.Map["x"], ".x-e");
+            newProject.Map["x_edit"] = Path.Combine(newProject.PathVars["Edit"], Path.GetFileNameWithoutExtension(mapFilePath) + @"_x\");
+            newProject.Map["x_export"] = Path.Combine(newProject.PathVars["Export"], Path.GetFileName(mapFilePath));
+            if (File.Exists(mapExtensionFilePath))
+            {
+                newProject.Map["x-e"] = Path.ChangeExtension(newProject.Map["x"], ".x-e");
+                newProject.Map["x-e_edit"] = Path.Combine(newProject.PathVars["Edit"], Path.GetFileNameWithoutExtension(mapFilePath) + @"_x-e\");
+                newProject.Map["x-e_export"] = Path.ChangeExtension(newProject.Map["x_export"], ".x-e");
+            }
 
             try
             {
                 foreach (KeyValuePair<string, string> entry in newProject.PathVars) Directory.CreateDirectory(entry.Value);
                 File.Copy(mapFilePath, newProject.Map["x"]);
                 if (newProject.Map["x-e"] != null) File.Copy(mapExtensionFilePath, newProject.Map["x-e"]);
+                UnpackMap(newProject);
             }
             catch (Exception e)
             {
@@ -128,9 +136,34 @@ namespace amrts_map
             if (projectNewLocation != null) DirectoryMethods.Copy(DirectoryMethods.GetParentDirectory(openedProject.Project["Path"]), projectNewLocation.SelectedPath);
         }
 
-        public static void UnpackMap()
+        public static void UnpackMap(OpenedProject openedProject)
         {
+            if (File.Exists(openedProject.Map["x"])) DrPack.Bridge.Run.Extract(openedProject.Map["x"], openedProject.Map["x_edit"]);
+            if (File.Exists(openedProject.Map["x-e"])) DrPack.Bridge.Run.Extract(openedProject.Map["x-e"], openedProject.Map["x-e_edit"]);
+        }
 
+        public static void PackMap(OpenedProject openedProject)
+        {
+            if (Directory.Exists(openedProject.Map["x_edit"])) DrPack.Bridge.Run.Create(openedProject.Map["x_export"], openedProject.Map["x_edit"]);
+            if (Directory.Exists(openedProject.Map["x-e_edit"])) DrPack.Bridge.Run.Create(openedProject.Map["x-e_export"], openedProject.Map["x-e_edit"]);
+        }
+
+        public static void DiscardChanges(OpenedProject openedProject)
+        {
+            DirectoryMethods.Clean(openedProject.PathVars["Edit"]);
+            UnpackMap(openedProject);
+        }
+
+        public static void Clean(OpenedProject openedProject)
+        {
+            DirectoryMethods.Clean(openedProject.PathVars["Export"]);
+        }
+
+        public static void Build(OpenedProject openedProject)
+        {
+            File.Delete(openedProject.Map["x_export"]);
+            File.Delete(openedProject.Map["x-e_export"]);
+            PackMap(openedProject);
         }
 
         public static void Close(OpenedProject openedProject)

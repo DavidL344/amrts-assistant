@@ -126,11 +126,20 @@ namespace amrts_map
                     break;
                 case "file_import":
                 case "file_export":
-                case "edit_discard_changes":
-                case "edit_run_studio":
-                case "build_build_project":
-                case "build_clean_project":
                     MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "edit_discard_changes":
+                    MessageBoxResult messageBoxResult = MessageBox.Show("Discard changes?", InternalMethods.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                    if (messageBoxResult == MessageBoxResult.Yes) Project.DiscardChanges(OpenedProject);
+                    break;
+                case "edit_run_studio":
+                    MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "build_build_project":
+                    Project.Build(OpenedProject);
+                    break;
+                case "build_clean_project":
+                    Project.Clean(OpenedProject);
                     break;
                 case "help_about":
                     Dialog.About(this);

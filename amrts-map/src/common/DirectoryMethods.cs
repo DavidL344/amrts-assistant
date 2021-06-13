@@ -62,5 +62,18 @@ namespace amrts_map
                 }
             }
         }
+
+        public static void Clean(string directory)
+        {
+            DirectoryInfo di = new DirectoryInfo(directory);
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir in di.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+        }
     }
 }
