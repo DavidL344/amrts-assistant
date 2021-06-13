@@ -32,14 +32,23 @@ namespace amrts_map
             LoadRecentlyOpenedFiles();
         }
 
-        private void LoadRecentlyOpenedFiles(bool loadExternally = false)
+        private void LoadRecentlyOpenedFiles(bool loadExternally = true)
         {
-            if (loadExternally) throw new NotImplementedException();
-
-            // Create samples
-            for (int i = 1; i <= 10; i++)
-                RecentlyOpenedFiles.Add(new string[] { String.Format("Sample Project {0}", i), Environment.ExpandEnvironmentVariables(String.Format(@"%userprofile%\Desktop\Project{0}\Project{0}.amramp", i)) });
+            lb_recent.Items.Clear();
+            if (loadExternally) RecentlyOpenedFiles = RecentlyOpened.Data;
+            else
+            {
+                // Create samples
+                for (int i = 1; i <= 10; i++)
+                    RecentlyOpenedFiles.Add(new string[] { String.Format("Sample Project {0}", i), Environment.ExpandEnvironmentVariables(String.Format(@"%userprofile%\Desktop\Project{0}\Project{0}.amramp", i)) });
+            }
             foreach (string[] value in RecentlyOpenedFiles) lb_recent.Items.Add(String.Format("{0}\r\n{1}{2}", value[0], "          ", value[1]));
+        }
+
+        private void ClearRecentlyOpenedFiles(object sender, RoutedEventArgs e)
+        {
+            RecentlyOpened.Clear();
+            lb_recent.Items.Clear();
         }
 
         private void ShowSampleRecentsInfo()
@@ -200,10 +209,14 @@ namespace amrts_map
             try
             {
                 if (openedProject == null) openedProject = new OpenedProject();
-                if (openedProject.Initialized && openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
+                if (openedProject.Initialized)
                 {
-                    MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
+                    {
+                        MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    RecentlyOpened.Add(openedProject.Project["Name"], openedProject.Project["Path"]);
                 }
 
                 MainWindow mainWindow = new MainWindow(openedProject);
@@ -214,6 +227,7 @@ namespace amrts_map
                 txt_project_new_location.Text = null;
                 txt_project_new_map_location.Text = null;
                 SwitchUI("main");
+                LoadRecentlyOpenedFiles();
 
                 mainWindow.ShowDialog();
                 this.Show();
