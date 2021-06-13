@@ -74,9 +74,15 @@ namespace amrts_map
 
             // TODO: consider switching to System.Runtime.Serialization.Formatters.Soap
             // (this will require to convert Dictionary<string, string> as it cannot be serialized by Soap)
-            BinaryFormatter formatter = new BinaryFormatter();
-            obj = (OpenedProject)formatter.Deserialize(stream);
-            stream.Close();
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                obj = (OpenedProject)formatter.Deserialize(stream);
+            }
+            finally
+            {
+                stream.Close();
+            }
 
             // Set the values of variables that were not deserialized
             obj.Project = new Dictionary<string, string>()
@@ -115,18 +121,19 @@ namespace amrts_map
             openedProject.Map["x"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x"], true);
             if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x-e"], true);
 
+            Stream stream = File.Open(customPath, FileMode.Create);
             try
             {
-                Stream stream = File.Open(customPath, FileMode.Create);
+                
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, openedProject);
-                stream.Close();
             }
             finally
             {
                 // Switch back to absolute paths for the program to use
                 openedProject.Map["x"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x"]);
                 if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x-e"]);
+                stream.Close();
             }
         }
 
