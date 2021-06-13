@@ -225,5 +225,28 @@ namespace amrts_map
                 MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void FileDropped(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files.Length != 1)
+                {
+                    MessageBox.Show("Only one file is supported at a time.", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                try
+                {
+                    OpenedProject = Project.Open(files[0]);
+                    OpenMainWindow(OpenedProject);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("The map file is invalid!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
     }
 }
