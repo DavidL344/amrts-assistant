@@ -84,13 +84,14 @@ namespace amrts_map
         private void ButtonClicked(object sender, RoutedEventArgs e)
         {
             string buttonName = (sender as Button).Name.ToString().Split(new string[] { "btn_" }, StringSplitOptions.RemoveEmptyEntries)[0];
-            string[] buttonNameTypes = new string[] { "start_", "project_" };
+            string[] buttonNameTypes = new string[] { "start_", "project_", "map_" };
 
             foreach (string buttonNameType in buttonNameTypes)
             {
                 if (buttonName.StartsWith(buttonNameType))
                 {
                     buttonName = buttonName.Split(new string[] { buttonNameType }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    MessageBox.Show(buttonName);
                     PerformAction(buttonName);
                     break;
                 }
@@ -99,104 +100,98 @@ namespace amrts_map
 
         private void PerformAction(string action)
         {
-            switch (action.ToLower())
+            try
             {
-                case "new":
-                case "new_back":
-                    if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = Project.DefaultName;
-                    if (string.IsNullOrWhiteSpace(txt_project_new_location.Text))
-                        txt_project_new_location.Text = Project.DefaultLocation;
-                    if (string.IsNullOrWhiteSpace(txt_project_new_map_location.Text))
-                        txt_project_new_map_location.Text = Project.DefaultMapLocation;
-                    SwitchUI();
-                    break;
-                case "new_location_browse":
-                    FolderBrowserDialog projectLocation = Dialog.BrowseFolder();
-                    if (projectLocation != null) txt_project_new_location.Text = projectLocation.SelectedPath;
-                    break;
-                case "new_map_location_browse":
-                    OpenFileDialog mapLocation = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
-                    if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
-                    break;
-                case "new_create":
-                    try
-                    {
+                switch (action.ToLower())
+                {
+                    case "new":
+                    case "new_back":
+                        if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = Project.DefaultName;
+                        if (string.IsNullOrWhiteSpace(txt_project_new_location.Text))
+                            txt_project_new_location.Text = Project.DefaultLocation;
+                        if (string.IsNullOrWhiteSpace(txt_project_new_map_location.Text))
+                            txt_project_new_map_location.Text = Project.DefaultMapLocation;
+                        SwitchUI("project_new");
+                        break;
+                    case "new_location_browse":
+                        FolderBrowserDialog projectLocation = Dialog.BrowseFolder();
+                        if (projectLocation != null) txt_project_new_location.Text = projectLocation.SelectedPath;
+                        break;
+                    case "new_map_location_browse":
+                        OpenFileDialog mapLocation = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
+                        if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
+                        break;
+                    case "new_create":
                         OpenedProject = Project.New(txt_project_name.Text, txt_project_new_location.Text, txt_project_new_map_location.Text);
                         OpenMainWindow(OpenedProject);
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    break;
-                case "open":
-                    OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
-                    if (openProjectDialog != null)
-                    {
-                        string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
-                        MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
-
-                        try
+                        break;
+                    case "open":
+                        OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
+                        if (openProjectDialog != null)
                         {
+                            string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
+                            MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+
                             OpenedProject = Project.Open(openProjectDialog.FileName);
                             OpenMainWindow(OpenedProject);
                         }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
-                    break;
-                case "import":
-                    OpenFileDialog importFileDialog = Dialog.OpenFile("Import a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
-                    if (importFileDialog != null)
-                    {
-                        string additionalFile = "(not detected)";
-                        if (File.Exists(Path.ChangeExtension(importFileDialog.FileName, ".x-e")))
-                        {
-                            additionalFile = Path.ChangeExtension(importFileDialog.FileName, ".x-e");
-                        }
-                        string info = String.Format("Selected file: {0}\r\nAdditional file: {1}", importFileDialog.FileName, additionalFile);
-                        MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
-
-                        try
-                        {
-                            OpenedProject = Project.OpenMap(importFileDialog.FileName);
-                            OpenMainWindow(OpenedProject);
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    }
-                    break;
-                case "empty":
-                    OpenMainWindow();
-                    break;
-                default:
-                    break;
+                        break;
+                    case "packer":
+                    case "packer_back":
+                        SwitchUI("map_packer");
+                        break;
+                    case "packer_mapfile_location_browse":
+                        OpenFileDialog mapLocationPack = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
+                        if (mapLocationPack != null) txt_map_packer_mapfile_location.Text = mapLocationPack.FileName;
+                        break;
+                    case "packer_directory_location_browse":
+                        FolderBrowserDialog projectLocationPack = Dialog.BrowseFolder();
+                        if (projectLocationPack != null) txt_map_packer_directory_location.Text = projectLocationPack.SelectedPath;
+                        break;
+                    case "packer_extract":
+                        DrPack.Bridge.Run.Extract(txt_map_packer_mapfile_location.Text, txt_map_packer_directory_location.Text);
+                        break;
+                    case "packer_create":
+                        DrPack.Bridge.Run.Create(txt_map_packer_mapfile_location.Text, txt_map_packer_directory_location.Text);
+                        break;
+                    case "packer_save_as":
+                        SaveFileDialog folderBrowserDialog = Dialog.SaveFile("Pack Map As...", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
+                        if (folderBrowserDialog != null) DrPack.Bridge.Run.Create(folderBrowserDialog.FileName, txt_map_packer_directory_location.Text);
+                        break;
+                    case "empty":
+                        OpenMainWindow();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBoxImage messageBoxImage = MessageBoxImage.Error;
+                if (e is System.ComponentModel.WarningException) messageBoxImage = MessageBoxImage.Warning;
+                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, messageBoxImage);
             }
         }
 
-        private void SwitchUI(string type = null)
+        private void SwitchUI(string type = "main")
         {
+            if (grid_main.Visibility != Visibility.Visible) type = "main";
             switch (type)
             {
-                case null:
-                    if (grid_main.Visibility == Visibility.Visible)
-                    {
-                        SwitchUI("project_new");
-                        return;
-                    }
-                    SwitchUI("main");
-                    break;
                 case "main":
                     grid_project_new.Visibility = Visibility.Hidden;
+                    grid_map_packer.Visibility = Visibility.Hidden;
                     grid_main.Visibility = Visibility.Visible;
                     break;
                 case "project_new":
                     grid_main.Visibility = Visibility.Hidden;
+                    grid_map_packer.Visibility = Visibility.Hidden;
                     grid_project_new.Visibility = Visibility.Visible;
+                    break;
+                case "map_packer":
+                    grid_main.Visibility = Visibility.Hidden;
+                    grid_project_new.Visibility = Visibility.Hidden;
+                    grid_map_packer.Visibility = Visibility.Visible;
                     break;
                 default:
                     break;
@@ -226,7 +221,7 @@ namespace amrts_map
                 txt_project_name.Text = null;
                 txt_project_new_location.Text = null;
                 txt_project_new_map_location.Text = null;
-                SwitchUI("main");
+                SwitchUI();
                 LoadRecentlyOpenedFiles();
 
                 mainWindow.ShowDialog();
