@@ -128,6 +128,11 @@ namespace amrts_map
             if (projectNewLocation != null) InternalMethods.CopyDirectory(InternalMethods.GetParentDirectory(openedProject.Project["Path"]), projectNewLocation.SelectedPath);
         }
 
+        public static void UnpackMap()
+        {
+
+        }
+
         public static void Close(OpenedProject openedProject)
         {
             openedProject.Reset();
