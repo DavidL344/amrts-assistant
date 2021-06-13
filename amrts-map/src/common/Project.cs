@@ -125,7 +125,7 @@ namespace amrts_map
         public static void SaveAs(OpenedProject openedProject)
         {
             FolderBrowserDialog projectNewLocation = Dialog.BrowseFolder("Save Project As...");
-            if (projectNewLocation != null) InternalMethods.CopyDirectory(InternalMethods.GetParentDirectory(openedProject.Project["Path"]), projectNewLocation.SelectedPath);
+            if (projectNewLocation != null) DirectoryMethods.Copy(DirectoryMethods.GetParentDirectory(openedProject.Project["Path"]), projectNewLocation.SelectedPath);
         }
 
         public static void UnpackMap()
