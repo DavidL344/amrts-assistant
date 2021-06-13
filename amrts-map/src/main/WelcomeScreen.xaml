@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         ui:WindowHelper.UseModernWindowStyle="True" Height="450" Width="850" MinHeight="450" MinWidth="850">
     <Grid Margin="40,10">
-        <Grid x:Name="grid_main" AllowDrop="True" Visibility="Hidden">
+        <Grid x:Name="grid_main" AllowDrop="True" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
@@ -93,7 +93,7 @@
             <Button x:Name="btn_project_new_create" Grid.Row="8" Grid.Column="3" Content="Create" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="5" Click="ButtonClicked"/>
         </Grid>
 
-        <Grid x:Name="grid_map_packer" Visibility="Visible">
+        <Grid x:Name="grid_map_packer" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="100"/>

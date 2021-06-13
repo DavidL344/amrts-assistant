@@ -51,34 +51,24 @@ namespace amrts_map
             lb_recent.Items.Clear();
         }
 
-        private void ShowSampleRecentsInfo()
+        private void OpenRecentFile(bool debug = false)
         {
             if (Keyboard.IsKeyDown(Key.Escape)) lb_recent.SelectedIndex = -1;
             if (lb_recent.SelectedIndex == -1) return;
             string selectedItem = (string)lb_recent.SelectedItem;
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
-            MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
-
-            try
-            {
-                OpenedProject = Project.Open(selectedItemArray[1].Trim());
-                OpenMainWindow(OpenedProject);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            if (debug) MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
         }
 
         private void lb_recent_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ShowSampleRecentsInfo();
+            OpenRecentFile();
         }
 
         private void lb_recent_KeyDown(object sender, KeyEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.Enter)) ShowSampleRecentsInfo();
+            if (Keyboard.IsKeyDown(Key.Enter)) OpenRecentFile();
         }
 
         private void ButtonClicked(object sender, RoutedEventArgs e)
@@ -91,14 +81,13 @@ namespace amrts_map
                 if (buttonName.StartsWith(buttonNameType))
                 {
                     buttonName = buttonName.Split(new string[] { buttonNameType }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    MessageBox.Show(buttonName);
                     PerformAction(buttonName);
                     break;
                 }
             }
         }
 
-        private void PerformAction(string action)
+        private void PerformAction(string action, bool debug = false)
         {
             try
             {
@@ -129,9 +118,11 @@ namespace amrts_map
                         OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
                         if (openProjectDialog != null)
                         {
-                            string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
-                            MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
-
+                            if (debug)
+                            {
+                                string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
+                                MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
                             OpenedProject = Project.Open(openProjectDialog.FileName);
                             OpenMainWindow(OpenedProject);
                         }
