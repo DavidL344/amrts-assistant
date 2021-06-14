@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,23 +37,26 @@ namespace amrts_map
             }
         }
 
+        private readonly List<string[]> licenseList = new List<string[]>
+        {
+            // { <Component Name>, <License URL>, <License Type> }
+            // <License Type> is only applied if there's neither online nor offline license information
+            new string[] { "app", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE", "MIT" },
+            new string[] { "ModernWpfUI", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE", "MIT" },
+            new string[] { "Dark Reign 2 - Pack Utility", null, "MIT" }
+        };
+
         public AboutBox()
         {
             InitializeComponent();
             this.Title = String.Format("About {0}", AssemblyTitle);
+        }
 
-            List<string[]> licenseList = new List<string[]>
-            {
-                // { <Component Name>, <License URL>, <License Type> }
-                // <License Type> is only applied if there's neither online nor offline license information
-                new string[] { "app", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE", "MIT" },
-                new string[] { "ModernWpfUI", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE", "MIT" },
-                new string[] { "Dark Reign 2 - Pack Utility", null, "MIT" }
-            };
-
+        private async void OnLoad(object sender, RoutedEventArgs e)
+        {
             foreach (string[] license in licenseList)
             {
-                string licenseData = LoadLicense(license[0], license[1], license[2]);
+                string licenseData = await LoadLicense(license[0], license[1], license[2]);
 
                 if (licenseData == null) return;
                 TabItem tabItem = new TabItem();
@@ -74,16 +78,21 @@ namespace amrts_map
                 tabItem.Content = grid;
                 tc_licenseInfo.Items.Add(tabItem);
             }
+            pr_status.IsActive = false;
+            tc_licenseInfo.Visibility = Visibility.Visible;
         }
 
-        public string LoadLicense(string localName = null, string onlineUrl = null, string alternativeLicenseInfo = null)
+        public async Task<string> LoadLicense(string localName = null, string onlineUrl = null, string alternativeLicenseInfo = null)
         {
             if (onlineUrl == null) return LoadOfflineLicense(localName, alternativeLicenseInfo).Trim();
             string licenseData = "";
 
             try
             {
-                using (System.Net.WebClient webClient = new System.Net.WebClient()) licenseData = webClient.DownloadString(new Uri(onlineUrl));
+                using (HttpClient webClient = new HttpClient())
+                {
+                    licenseData = await webClient.GetStringAsync(new Uri(onlineUrl));
+                }
             }
             catch (Exception e)
             {
@@ -122,7 +131,6 @@ namespace amrts_map
         }
 
         #region Assembly Attribute Accessors
-
         public static string AssemblyTitle
         {
             get

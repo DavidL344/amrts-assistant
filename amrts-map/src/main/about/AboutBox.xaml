@@ -9,17 +9,18 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="AboutBox" Height="450" Width="800" ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+        WindowStartupLocation="CenterScreen" ShowInTaskbar="False" Loaded="OnLoad">
     <Grid Margin="20, 15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        
         <TextBlock Grid.Row="0" Text="{Binding NameWithVersion}" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
-
+        <ui:ProgressRing Grid.Row="1" x:Name="pr_status" Width="100" Height="100" IsActive="True"/>
         <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="0,10">
-            <TabControl x:Name="tc_licenseInfo" TabStripPlacement="Bottom">
+            <TabControl x:Name="tc_licenseInfo" TabStripPlacement="Bottom" Visibility="Hidden">
                 <!--
                 <TabItem Header="{Binding AssemblyTitle}">
                     <Grid Margin="10">
