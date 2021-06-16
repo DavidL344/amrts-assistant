@@ -34,15 +34,19 @@
                     <MenuItem x:Name="mi_menu_file_save" Header="Save" InputGestureText="Ctrl+S" Click="MenuItemClicked"/>
                     <MenuItem x:Name="mi_menu_file_save_as" Header="Save As..." InputGestureText="Ctrl+Shift+S" Click="MenuItemClicked"/>
                     <Separator/>
-                    <MenuItem x:Name="mi_menu_file_import" Header="Import..." InputGestureText="Ctrl+I" Click="MenuItemClicked"/>
-                    <MenuItem x:Name="mi_menu_file_export" Header="Export..." InputGestureText="Ctrl+E" Click="MenuItemClicked"/>
-                    <Separator/>
                     <MenuItem x:Name="mi_menu_file_close" Header="Close" Click="MenuItemClicked"/>
                     <MenuItem x:Name="mi_menu_file_exit" Header="Exit" Click="MenuItemClicked"/>
                 </MenuItem>
                 <MenuItem x:Name="mi_menu_edit" Header="Edit">
                     <MenuItem x:Name="mi_menu_edit_discard_changes" Header="Discard Changes" InputGestureText="Ctrl+Delete" Click="MenuItemClicked"/>
                     <MenuItem x:Name="mi_menu_edit_run_studio" Header="Run Studio" InputGestureText="Ctrl+R" Click="MenuItemClicked"/>
+                </MenuItem>
+                <MenuItem x:Name="mi_menu_project" Header="Project">
+                    <MenuItem x:Name="mi_menu_project_item_new" Header="Add New Item..." InputGestureText="Ctrl+Shift+A" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_project_item_add" Header="Add Existing Item..." InputGestureText="Shift+Alt+A" Click="MenuItemClicked"/>
+                    <Separator/>
+                    <MenuItem x:Name="mi_menu_project_show_explorer" Header="Open in File Explorer" InputGestureText="Ctrl+Alt+E" Click="MenuItemClicked"/>
+                    <MenuItem x:Name="mi_menu_project_show_terminal" Header="Open in Terminal" InputGestureText="Ctrl+Alt+T" Click="MenuItemClicked"/>
                 </MenuItem>
                 <MenuItem x:Name="mi_menu_build" Header="Build">
                     <MenuItem x:Name="mi_menu_build_build_project" Header="Build Project" InputGestureText="Ctrl+B" Click="MenuItemClicked"/>

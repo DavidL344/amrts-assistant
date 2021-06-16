@@ -42,8 +42,10 @@ namespace amrts_map
 
         private void ProjectLoaded(bool loaded)
         {
-            mi_menu_file_save.IsEnabled = mi_menu_file_save_as.IsEnabled = mi_menu_file_export.IsEnabled = loaded;
+            mi_menu_file_save.IsEnabled = mi_menu_file_save_as.IsEnabled = loaded;
             mi_menu_edit_discard_changes.IsEnabled = mi_menu_edit_run_studio.IsEnabled = loaded;
+            mi_menu_project_item_new.IsEnabled = mi_menu_project_item_add.IsEnabled = loaded;
+            mi_menu_project_show_explorer.IsEnabled = mi_menu_project_show_terminal.IsEnabled = loaded;
             mi_menu_build_build_project.IsEnabled = mi_menu_build_clean_project.IsEnabled = loaded;
             tc_main.Visibility = loaded ? Visibility.Visible : Visibility.Hidden;
 
@@ -57,9 +59,10 @@ namespace amrts_map
 
         public void ActionListener(object sender, KeyEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            string action = null;
+            if (InternalMethods.IsThisOrSimilarKeyDown(Key.LeftCtrl))
             {
-                string action;
+                // Ctrl+*
                 switch (e.Key)
                 {
                     case Key.N:
@@ -69,13 +72,7 @@ namespace amrts_map
                         action = "file_open";
                         break;
                     case Key.S:
-                        action = (Keyboard.IsKeyDown(Key.LeftShift)) ? "file_save_as" : "file_save";
-                        break;
-                    case Key.I:
-                        action = "file_import";
-                        break;
-                    case Key.E:
-                        action = "file_export";
+                        action = InternalMethods.IsThisOrSimilarKeyDown(Key.LeftShift) ? "file_save_as" : "file_save";
                         break;
                     case Key.Delete:
                         action = "edit_discard_changes";
@@ -87,10 +84,32 @@ namespace amrts_map
                         action = "build_build_project";
                         break;
                     default:
-                        return;
+                        break;
                 }
-                PerformAction(action);
+
+                if (InternalMethods.IsThisOrSimilarKeyDown(Key.LeftAlt))
+                {
+                    // Ctrl+Alt+*
+                    switch (e.Key)
+                    {
+                        case Key.E:
+                            action = "project_show_explorer";
+                        break;
+                        case Key.T:
+                            action = "project_show_terminal";
+                        break;
+                    }
+                }
             }
+
+            if (InternalMethods.IsThisOrSimilarKeyDown(Key.LeftShift) && Keyboard.IsKeyDown(Key.A))
+            {
+                // *+Shift+A
+                if (InternalMethods.IsThisOrSimilarKeyDown(Key.LeftCtrl)) action = "project_item_new";
+                if (InternalMethods.IsThisOrSimilarKeyDown(Key.LeftAlt)) action = "project_item_add";
+            }
+
+            if (action != null) PerformAction(action);
         }
 
         public void PerformAction(string action)
@@ -101,9 +120,12 @@ namespace amrts_map
                 {
                     case "file_save":
                     case "file_save_as":
-                    case "file_export":
                     case "edit_discard_changes":
                     case "edit_run_studio":
+                    case "project_item_new":
+                    case "project_item_add":
+                    case "project_show_explorer":
+                    case "project_show_terminal":
                     case "build_build_project":
                     case "build_clean_project":
                         return;
@@ -126,16 +148,20 @@ namespace amrts_map
                 case "file_save_as":
                     Project.SaveAs(OpenedProject);
                     break;
-                case "file_import":
-                case "file_export":
-                    MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
-                    break;
                 case "edit_discard_changes":
                     MessageBoxResult messageBoxResult = MessageBox.Show("Discard changes?", InternalMethods.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
                     if (messageBoxResult == MessageBoxResult.Yes) Project.DiscardChanges(OpenedProject);
                     break;
                 case "edit_run_studio":
+                case "project_item_new":
+                case "project_item_add":
                     MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+                case "project_show_explorer":
+                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("explorer.exe"), OpenedProject.PathVars["Root"]);
+                    break;
+                case "project_show_terminal":
+                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("cmd.exe"), OpenedProject.PathVars["Root"]);
                     break;
                 case "build_build_project":
                     Project.Build(OpenedProject);

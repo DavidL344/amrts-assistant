@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace amrts_map
 {
@@ -81,9 +82,36 @@ namespace amrts_map
             Process.Start(processStartInfo);
         }
 
+        public static ProcessStartInfo GetProcessStartInfo(string executablePath)
+        {
+            return new ProcessStartInfo
+            {
+                FileName = executablePath,
+                WorkingDirectory = Path.GetDirectoryName(executablePath)
+            };
+        }
+
         public static bool MultipleInstancesRunning()
         {
             return ProcessInstances > 1;
+        }
+
+        public static bool IsThisOrSimilarKeyDown(Key key)
+        {
+            switch (key)
+            {
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
+                    return Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+                case Key.LeftAlt:
+                case Key.RightAlt:
+                    return Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
+                case Key.LeftShift:
+                case Key.RightShift:
+                    return Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+                default:
+                    return false;
+            }
         }
     }
 }
