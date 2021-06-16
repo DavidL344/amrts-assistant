@@ -13,5 +13,13 @@ namespace amrts_map
     /// </summary>
     public partial class App : Application
     {
+        public static string[] Args = new string[] { };
+        void OnStart(object sender, StartupEventArgs e)
+        { 
+            if (e.Args.Length > 0)
+            {
+                Args = e.Args;
+            }
+        }
     }
 }

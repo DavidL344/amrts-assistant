@@ -30,6 +30,7 @@ namespace amrts_map
         {
             InitializeComponent();
             LoadRecentlyOpenedFiles();
+            HandleArgs();
         }
 
         private void LoadRecentlyOpenedFiles(bool loadExternally = true)
@@ -252,6 +253,52 @@ namespace amrts_map
                 catch (Exception)
                 {
                     MessageBox.Show("The map file is invalid!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void HandleArgs(string[] args = null)
+        {
+            if (args == null) args = App.Args;
+            if (args.Length > 0)
+            {
+                switch (args[0])
+                {
+                    case "-new":
+                        SwitchUI("project_new");
+                        break;
+                    case "-pack":
+                        SwitchUI("map_packer");
+                        break;
+                    case "-window":
+                        OpenMainWindow();
+                        this.Close();
+                        break;
+                    case "-open":
+                        try
+                        {
+                            if (args.Length == 2)
+                            {
+                                OpenedProject = Project.Open(args[1]);
+                                OpenMainWindow(OpenedProject);
+                            }
+                            else
+                            {
+                                PerformAction("open");
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        finally
+                        {
+                            this.Close();
+                        }
+                        break;
+                    default:
+                        HandleArgs(new string[] { "-open", args[0] });
+                        break;
                 }
             }
         }
