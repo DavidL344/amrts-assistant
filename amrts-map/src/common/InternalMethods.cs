@@ -113,5 +113,25 @@ namespace amrts_map
                     return false;
             }
         }
+
+        public static bool IsMapKeyValid(Dictionary<string, string> dictionary, string fileExtensionWithoutDot)
+        {
+            string[] searchedKeys = new string[] { "", "_edit", "_export" };
+            bool valid = true;
+            try
+            {
+                foreach (string searchedKey in searchedKeys)
+                {
+                    string checkedKey = fileExtensionWithoutDot + searchedKey;
+                    valid = dictionary.ContainsKey(checkedKey) && dictionary[checkedKey] != null;
+                }
+            }
+            catch
+            {
+                valid = false;
+            }
+            finally{}
+            return valid;
+        }
     }
 }

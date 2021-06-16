@@ -124,7 +124,6 @@ namespace amrts_map
             Stream stream = File.Open(customPath, FileMode.Create);
             try
             {
-                
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(stream, openedProject);
             }
@@ -145,14 +144,18 @@ namespace amrts_map
 
         public static void UnpackMap(OpenedProject openedProject)
         {
-            if (File.Exists(openedProject.Map["x"])) DrPack.Bridge.Run.Extract(openedProject.Map["x"], openedProject.Map["x_edit"]);
-            if (File.Exists(openedProject.Map["x-e"])) DrPack.Bridge.Run.Extract(openedProject.Map["x-e"], openedProject.Map["x-e_edit"]);
+            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x") && File.Exists(openedProject.Map["x"]))
+                DrPack.Bridge.Run.Extract(openedProject.Map["x"], openedProject.Map["x_edit"]);
+            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x-e") && File.Exists(openedProject.Map["x-e"]))
+                DrPack.Bridge.Run.Extract(openedProject.Map["x-e"], openedProject.Map["x-e_edit"]);
         }
 
         public static void PackMap(OpenedProject openedProject)
         {
-            if (Directory.Exists(openedProject.Map["x_edit"])) DrPack.Bridge.Run.Create(openedProject.Map["x_export"], openedProject.Map["x_edit"]);
-            if (Directory.Exists(openedProject.Map["x-e_edit"])) DrPack.Bridge.Run.Create(openedProject.Map["x-e_export"], openedProject.Map["x-e_edit"]);
+            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x") && Directory.Exists(openedProject.Map["x_edit"]))
+                DrPack.Bridge.Run.Create(openedProject.Map["x_export"], openedProject.Map["x_edit"]);
+            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x-e") && Directory.Exists(openedProject.Map["x-e_edit"]))
+                DrPack.Bridge.Run.Create(openedProject.Map["x-e_export"], openedProject.Map["x-e_edit"]);
         }
 
         public static void DiscardChanges(OpenedProject openedProject)
@@ -168,8 +171,8 @@ namespace amrts_map
 
         public static void Build(OpenedProject openedProject)
         {
-            File.Delete(openedProject.Map["x_export"]);
-            File.Delete(openedProject.Map["x-e_export"]);
+            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x")) File.Delete(openedProject.Map["x_export"]);
+            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x-e")) File.Delete(openedProject.Map["x-e_export"]);
             PackMap(openedProject);
         }
 
