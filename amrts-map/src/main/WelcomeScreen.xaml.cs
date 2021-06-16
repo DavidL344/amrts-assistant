@@ -105,11 +105,6 @@ namespace amrts_map
                 {
                     case "new":
                     case "new_back":
-                        if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = Project.DefaultName;
-                        if (string.IsNullOrWhiteSpace(txt_project_new_location.Text))
-                            txt_project_new_location.Text = Project.DefaultLocation;
-                        if (string.IsNullOrWhiteSpace(txt_project_new_map_location.Text))
-                            txt_project_new_map_location.Text = Project.DefaultMapLocation;
                         SwitchUI("project_new");
                         break;
                     case "new_location_browse":
@@ -185,6 +180,12 @@ namespace amrts_map
                     grid_main.Visibility = Visibility.Visible;
                     break;
                 case "project_new":
+                    if (string.IsNullOrWhiteSpace(txt_project_name.Text)) txt_project_name.Text = Project.DefaultName;
+                    if (string.IsNullOrWhiteSpace(txt_project_new_location.Text))
+                        txt_project_new_location.Text = Project.DefaultLocation;
+                    if (string.IsNullOrWhiteSpace(txt_project_new_map_location.Text))
+                        txt_project_new_map_location.Text = Project.DefaultMapLocation;
+
                     grid_main.Visibility = Visibility.Hidden;
                     grid_map_packer.Visibility = Visibility.Hidden;
                     grid_project_new.Visibility = Visibility.Visible;
@@ -257,7 +258,7 @@ namespace amrts_map
             }
         }
 
-        private void HandleArgs(string[] args = null)
+        public void HandleArgs(string[] args = null)
         {
             if (args == null) args = App.Args;
             if (args.Length > 0)
@@ -265,9 +266,11 @@ namespace amrts_map
                 switch (args[0])
                 {
                     case "-new":
+                        if (InternalMethods.MultipleInstancesRunning()) btn_project_new_back.Visibility = Visibility.Hidden;
                         SwitchUI("project_new");
                         break;
                     case "-pack":
+                        if (InternalMethods.MultipleInstancesRunning()) btn_map_packer_back.Visibility = Visibility.Hidden;
                         SwitchUI("map_packer");
                         break;
                     case "-window":

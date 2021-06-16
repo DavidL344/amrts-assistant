@@ -115,8 +115,10 @@ namespace amrts_map
             switch (action.ToLower())
             {
                 case "file_new":
+                    InternalMethods.Run(null, "-new");
+                    break;
                 case "file_open":
-                    MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                    InternalMethods.Run(null, "-open");
                     break;
                 case "file_save":
                     Project.Save(OpenedProject);

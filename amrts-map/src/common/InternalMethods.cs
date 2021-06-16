@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +26,34 @@ namespace amrts_map
             }
         }
 
+        public static string ProcessPath
+        {
+            get
+            {
+                return Path.GetFullPath(Assembly.GetExecutingAssembly().Location);
+            }
+        }
+
+        public static ProcessStartInfo ThisApp
+        {
+            get
+            {
+                return new ProcessStartInfo
+                {
+                    FileName = ProcessPath,
+                    WorkingDirectory = Path.GetDirectoryName(ProcessPath)
+                };
+            }
+        }
+
+        public static int ProcessInstances
+        {
+            get
+            {
+                return Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location)).Count();
+            }
+        }
+
         public static string GetPath(string pathToConvert, string secondPathToConvert, bool useRelativePath = false)
         {
             if (useRelativePath)
@@ -42,6 +72,18 @@ namespace amrts_map
             {
                 fsDst.Write(resource, 0, resource.Length);
             }
+        }
+
+        public static void Run(ProcessStartInfo processStartInfo = null, string arguments = null)
+        {
+            if (processStartInfo == null) processStartInfo = ThisApp;
+            if (arguments != null) processStartInfo.Arguments = arguments;
+            Process.Start(processStartInfo);
+        }
+
+        public static bool MultipleInstancesRunning()
+        {
+            return ProcessInstances > 1;
         }
     }
 }
