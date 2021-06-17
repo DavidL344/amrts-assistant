@@ -75,10 +75,11 @@ namespace amrts_map
             }
         }
 
-        public static void Run(ProcessStartInfo processStartInfo = null, string arguments = null)
+        public static void Run(ProcessStartInfo processStartInfo = null, string arguments = null, string workingDirectory = null)
         {
             if (processStartInfo == null) processStartInfo = ThisApp;
             if (arguments != null) processStartInfo.Arguments = arguments;
+            if (workingDirectory != null) processStartInfo.WorkingDirectory = workingDirectory;
             Process.Start(processStartInfo);
         }
 
