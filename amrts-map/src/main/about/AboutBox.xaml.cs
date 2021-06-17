@@ -43,6 +43,7 @@ namespace amrts_map
             // <License Type> is only applied if there's neither online nor offline license information
             new string[] { "app", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE", "MIT" },
             new string[] { "ModernWpfUI", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE", "MIT" },
+            new string[] { "Newtonsoft.Json", "https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md", "MIT" },
             new string[] { "Dark Reign 2 - Pack Utility", null, "MIT" }
         };
 
@@ -118,6 +119,9 @@ namespace amrts_map
                     break;
                 case "ModernWpfUI":
                     licenseBytes = Properties.Resources.LICENSE_ModernWpfUI;
+                    break;
+                case "Newtonsoft.Json":
+                    licenseBytes = Properties.Resources.LICENSE_Newtonsoft_Json;
                     break;
                 default:
                     return String.Format("This component is available under the following license: {0} (the direct link to the license couldn't be found)", alternativeLicenseInfo);

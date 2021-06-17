@@ -79,5 +79,15 @@ namespace amrts_map.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] LICENSE_Newtonsoft_Json {
+            get {
+                object obj = ResourceManager.GetObject("LICENSE_Newtonsoft_Json", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

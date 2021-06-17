@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
@@ -66,23 +66,11 @@ namespace amrts_map
         public static OpenedProject Open(string projectPath)
         {
             if (!File.Exists(projectPath)) throw new FileNotFoundException("The map project doesn't exist!");
-            Stream stream = File.Open(projectPath, FileMode.Open);
 
             // The object has to be created beforehand to assign non-serialized variables
             OpenedProject obj = new OpenedProject();
             obj.Reset(); // Suppresses the warning about the unnecessary assignment above
-
-            // TODO: consider switching to System.Runtime.Serialization.Formatters.Soap
-            // (this will require to convert Dictionary<string, string> as it cannot be serialized by Soap)
-            try
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                obj = (OpenedProject)formatter.Deserialize(stream);
-            }
-            finally
-            {
-                stream.Close();
-            }
+            obj = JsonConvert.DeserializeObject<OpenedProject>(File.ReadAllText(projectPath));
 
             // Set the values of variables that were not deserialized
             obj.Project = new Dictionary<string, string>()
@@ -92,8 +80,7 @@ namespace amrts_map
             };
 
             // Get full path of the files (parts of the serialized object contain relative paths)
-            obj.Map["x"] = InternalMethods.GetPath(obj.Project["Path"], obj.Map["x"]);
-            if (obj.Map["x-e"] != null) obj.Map["x-e"] = InternalMethods.GetPath(obj.Project["Path"], obj.Map["x-e"]);
+            obj.ChangePathType("absolute");
 
             obj.Initialized = true;
             return obj;
@@ -113,26 +100,18 @@ namespace amrts_map
             return map;
         }
 
-        public static void Save(OpenedProject openedProject, string customPath = null)
+        public static void Save(OpenedProject openedProject)
         {
-            if (customPath == null) customPath = openedProject.Project["Path"];
-
             // Use relative paths for serialization
-            openedProject.Map["x"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x"], true);
-            if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x-e"], true);
-
-            Stream stream = File.Open(customPath, FileMode.Create);
+            openedProject.ChangePathType("relative");
             try
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, openedProject);
+                File.WriteAllText(openedProject.Project["Path"], JsonConvert.SerializeObject(openedProject));
             }
             finally
             {
                 // Switch back to absolute paths for the program to use
-                openedProject.Map["x"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x"]);
-                if (openedProject.Map["x-e"] != null) openedProject.Map["x-e"] = InternalMethods.GetPath(openedProject.Project["Path"], openedProject.Map["x-e"]);
-                stream.Close();
+                openedProject.ChangePathType("absolute");
             }
         }
 
@@ -144,17 +123,17 @@ namespace amrts_map
 
         public static void UnpackMap(OpenedProject openedProject)
         {
-            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x") && File.Exists(openedProject.Map["x"]))
+            if (openedProject.IsMapKeyValid("x") && File.Exists(openedProject.Map["x"]))
                 DrPack.Bridge.Run.Extract(openedProject.Map["x"], openedProject.Map["x_edit"]);
-            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x-e") && File.Exists(openedProject.Map["x-e"]))
+            if (openedProject.IsMapKeyValid("x-e") && File.Exists(openedProject.Map["x-e"]))
                 DrPack.Bridge.Run.Extract(openedProject.Map["x-e"], openedProject.Map["x-e_edit"]);
         }
 
         public static void PackMap(OpenedProject openedProject)
         {
-            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x") && Directory.Exists(openedProject.Map["x_edit"]))
+            if (openedProject.IsMapKeyValid("x") && Directory.Exists(openedProject.Map["x_edit"]))
                 DrPack.Bridge.Run.Create(openedProject.Map["x_export"], openedProject.Map["x_edit"]);
-            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x-e") && Directory.Exists(openedProject.Map["x-e_edit"]))
+            if (openedProject.IsMapKeyValid("x-e") && Directory.Exists(openedProject.Map["x-e_edit"]))
                 DrPack.Bridge.Run.Create(openedProject.Map["x-e_export"], openedProject.Map["x-e_edit"]);
         }
 
@@ -171,8 +150,8 @@ namespace amrts_map
 
         public static void Build(OpenedProject openedProject)
         {
-            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x")) File.Delete(openedProject.Map["x_export"]);
-            if (InternalMethods.IsMapKeyValid(openedProject.Map, "x-e")) File.Delete(openedProject.Map["x-e_export"]);
+            if (openedProject.IsMapKeyValid("x")) File.Delete(openedProject.Map["x_export"]);
+            if (openedProject.IsMapKeyValid("x-e")) File.Delete(openedProject.Map["x-e_export"]);
             PackMap(openedProject);
         }
 
