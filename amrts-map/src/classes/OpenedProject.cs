@@ -61,6 +61,9 @@ namespace amrts_map
 
             foreach (string pathVarKey in pathVarKeys)
                 this.PathVars[pathVarKey] = this.PathVars[pathVarKey] != null ? InternalMethods.GetPath(this.Project["Path"], this.PathVars[pathVarKey], useRelativePath) : null;
+
+            // The project file should always be located at the project's root
+            if (useRelativePath) this.PathVars["Root"] = "";
         }
 
         public bool IsKeyValid(string dictionaryKey, bool strictIO = false)
