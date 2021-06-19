@@ -205,15 +205,21 @@ namespace amrts_map
             lb_recent.SelectedIndex = -1; // Reset the selected recent file (if applicable)
             try
             {
-                if (openedProject == null) openedProject = new OpenedProject();
-                if (openedProject.Initialized)
+                if (openedProject != null)
                 {
-                    if (openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
+                    if (openedProject.Initialized)
                     {
-                        MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
+                        {
+                            MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                        RecentlyOpened.Add(openedProject.Project["Name"], openedProject.Project["Path"]);
+                    }
+                    else
+                    {
                         return;
                     }
-                    RecentlyOpened.Add(openedProject.Project["Name"], openedProject.Project["Path"]);
                 }
 
                 MainWindow mainWindow = new MainWindow(openedProject);

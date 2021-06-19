@@ -65,6 +65,7 @@ namespace amrts_map
 
         public static void Clean(string directory)
         {
+            if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
             DirectoryInfo di = new DirectoryInfo(directory);
             foreach (FileInfo file in di.GetFiles())
             {

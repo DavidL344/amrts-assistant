@@ -14,7 +14,20 @@ namespace amrts_map
         [JsonIgnore] public Dictionary<string, string> Project = new Dictionary<string, string>();
         public Dictionary<string, string> Map = new Dictionary<string, string>();
         public Dictionary<string, string> PathVars = new Dictionary<string, string>();
-        [JsonIgnore] public bool Initialized;
+        [JsonIgnore] public bool Initialized {
+            get
+            {
+                try
+                {
+                    return this.IsValid();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                    return false;
+                }
+            }
+        }
 
         [JsonIgnore] readonly string[] xTypes = new string[] { "x", "x-e" };
         [JsonIgnore] readonly string[] xKeys = new string[] { "", "_edit", "_export" };
@@ -36,34 +49,85 @@ namespace amrts_map
 
             foreach (string xType in xTypes)
             {
-                if (IsMapKeyValid(xType))
+                if (IsKeyValid(xType))
                 {
                     foreach (string xKey in xKeys)
-                        this.Map[xType + xKey] = InternalMethods.GetPath(this.Project["Path"], this.Map[xType + xKey], useRelativePath);
+                        this.Map[xType + xKey] = this.Map[xType + xKey] != null ? InternalMethods.GetPath(this.Project["Path"], this.Map[xType + xKey], useRelativePath) : null;
                 }
             }
-            
+
             foreach (string pathVarKey in pathVarKeys)
-                this.PathVars[pathVarKey] = InternalMethods.GetPath(this.Project["Path"], this.PathVars[pathVarKey], useRelativePath);
+                this.PathVars[pathVarKey] = this.PathVars[pathVarKey] != null ? InternalMethods.GetPath(this.Project["Path"], this.PathVars[pathVarKey], useRelativePath) : null;
         }
 
-        public bool IsMapKeyValid(string fileExtensionWithoutDot)
+        public bool IsKeyValid(string dictionaryKey, bool strictIO = false)
         {
             bool valid = true;
-            try
+            if (xTypes.Contains(dictionaryKey))
             {
                 foreach (string searchedKey in xKeys)
                 {
-                    string checkedKey = fileExtensionWithoutDot + searchedKey;
-                    valid = this.Map.ContainsKey(checkedKey) && this.Map[checkedKey] != null;
+                    string checkedKey = dictionaryKey + searchedKey;
+                    if (!this.Map.ContainsKey(checkedKey)) return false;
+
+                    // Allow the dictionary key for "x-e" to be null since its presence is optional
+                    if (this.Map[checkedKey] == null)
+                        if (strictIO || !checkedKey.StartsWith("x-e")) return false;
                 }
             }
-            catch
+            else if (pathVarKeys.Contains(dictionaryKey))
             {
-                valid = false;
+                valid = this.PathVars.ContainsKey(dictionaryKey) && this.PathVars[dictionaryKey] != null;
+                if (!valid) return false;
             }
-            finally { }
+            else valid = false;
             return valid;
+        }
+
+        public bool IsValid()
+        {
+            // Dynamically add the map extension to the project if it exists
+            if (File.Exists(Path.ChangeExtension(Map["x"], ".x-e")))
+            {
+                Map["x-e"] = Path.ChangeExtension(Map["x"], ".x-e");
+                Map["x-e_edit"] = Path.Combine(PathVars["Edit"], Path.GetFileNameWithoutExtension(Map["x"]) + @"_x-e\");
+                Map["x-e_export"] = Path.ChangeExtension(Map["x_export"], ".x-e");
+            }
+            else
+            {
+                Map["x-e"] = null;
+                Map["x-e_edit"] = null;
+                Map["x-e_export"] = null;
+            }
+
+            // The dictionary keys for maps
+            foreach (string value in xTypes)
+                if (!IsKeyValid(value)) throw new Exception("The map definitions in the project file are missing!");
+
+            // The dictionary keys for paths
+            foreach (string value in pathVarKeys)
+            {
+                if (!IsKeyValid(value)) throw new Exception("The directory definitions in the project file are missing!");
+                if (!Directory.Exists(this.PathVars[value]))
+                {
+                    switch (value)
+                    {
+                        case "Root":
+                            throw new IOException("The project root couldn't be found!");
+                        case "Cache":
+                            throw new DirectoryNotFoundException("The directory containing cached map files couldn't be found!");
+                        case "Edit":
+                            amrts_map.Project.DiscardChanges(this);
+                            break;
+                        case "Export":
+                            amrts_map.Project.CleanExport(this);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return true;
         }
 
         public void Reset()
@@ -77,7 +141,6 @@ namespace amrts_map
             PathVars["Cache"] = null;
             PathVars["Edit"] = null;
             PathVars["Export"] = null;
-            Initialized = false;
         }
     }
 }

@@ -45,6 +45,7 @@ namespace amrts_map
                 newProject.Map["x-e_edit"] = Path.Combine(newProject.PathVars["Edit"], Path.GetFileNameWithoutExtension(mapFilePath) + @"_x-e\");
                 newProject.Map["x-e_export"] = Path.ChangeExtension(newProject.Map["x_export"], ".x-e");
             }
+            else newProject.Map["x-e"] = newProject.Map["x-e_edit"] = newProject.Map["x-e_export"] = null;
 
             try
             {
@@ -58,7 +59,6 @@ namespace amrts_map
                 throw new Exception(e.Message);
             }
 
-            newProject.Initialized = true;
             Save(newProject);
             return newProject;
         }
@@ -81,8 +81,6 @@ namespace amrts_map
 
             // Get full path of the files (parts of the serialized object contain relative paths)
             obj.ChangePathType("absolute");
-
-            obj.Initialized = true;
             return obj;
         }
 
@@ -96,7 +94,6 @@ namespace amrts_map
             map.Map["Name"] = map.Project["Name"];
             map.Map["x"] = mapPath;
             if (File.Exists(Path.ChangeExtension(mapPath, ".x-e"))) map.Map["x-e"] = Path.ChangeExtension(mapPath, ".x-e");
-            map.Initialized = true;
             return map;
         }
 
@@ -106,7 +103,7 @@ namespace amrts_map
             openedProject.ChangePathType("relative");
             try
             {
-                File.WriteAllText(openedProject.Project["Path"], JsonConvert.SerializeObject(openedProject));
+                File.WriteAllText(openedProject.Project["Path"], JsonConvert.SerializeObject(openedProject, Formatting.Indented));
             }
             finally
             {
@@ -123,17 +120,17 @@ namespace amrts_map
 
         public static void UnpackMap(OpenedProject openedProject)
         {
-            if (openedProject.IsMapKeyValid("x") && File.Exists(openedProject.Map["x"]))
+            if (openedProject.IsKeyValid("x") && File.Exists(openedProject.Map["x"]))
                 DrPack.Bridge.Run.Extract(openedProject.Map["x"], openedProject.Map["x_edit"]);
-            if (openedProject.IsMapKeyValid("x-e") && File.Exists(openedProject.Map["x-e"]))
+            if (openedProject.IsKeyValid("x-e") && File.Exists(openedProject.Map["x-e"]))
                 DrPack.Bridge.Run.Extract(openedProject.Map["x-e"], openedProject.Map["x-e_edit"]);
         }
 
         public static void PackMap(OpenedProject openedProject)
         {
-            if (openedProject.IsMapKeyValid("x") && Directory.Exists(openedProject.Map["x_edit"]))
+            if (openedProject.IsKeyValid("x") && Directory.Exists(openedProject.Map["x_edit"]))
                 DrPack.Bridge.Run.Create(openedProject.Map["x_export"], openedProject.Map["x_edit"]);
-            if (openedProject.IsMapKeyValid("x-e") && Directory.Exists(openedProject.Map["x-e_edit"]))
+            if (openedProject.IsKeyValid("x-e") && Directory.Exists(openedProject.Map["x-e_edit"]))
                 DrPack.Bridge.Run.Create(openedProject.Map["x-e_export"], openedProject.Map["x-e_edit"]);
         }
 
@@ -143,15 +140,15 @@ namespace amrts_map
             UnpackMap(openedProject);
         }
 
-        public static void Clean(OpenedProject openedProject)
+        public static void CleanExport(OpenedProject openedProject)
         {
             DirectoryMethods.Clean(openedProject.PathVars["Export"]);
         }
 
         public static void Build(OpenedProject openedProject)
         {
-            if (openedProject.IsMapKeyValid("x")) File.Delete(openedProject.Map["x_export"]);
-            if (openedProject.IsMapKeyValid("x-e")) File.Delete(openedProject.Map["x-e_export"]);
+            if (openedProject.IsKeyValid("x")) File.Delete(openedProject.Map["x_export"]);
+            if (openedProject.IsKeyValid("x-e", true)) File.Delete(openedProject.Map["x-e_export"]);
             PackMap(openedProject);
         }
 
