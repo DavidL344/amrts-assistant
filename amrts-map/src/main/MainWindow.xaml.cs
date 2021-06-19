@@ -31,7 +31,7 @@ namespace amrts_map
             InitializeComponent();
             this.KeyDown += new KeyEventHandler(this.ActionListener);
             this.OpenedProject = openedProject;
-            if (OpenedProject != null) ProjectLoaded(OpenedProject.Initialized);
+            ProjectLoaded(OpenedProject.Initialized);
         }
 
         private void MenuItemClicked(object sender, RoutedEventArgs e)

@@ -116,8 +116,15 @@ namespace amrts_map
                         if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
                         break;
                     case "new_create":
-                        OpenedProject = Project.New(txt_project_name.Text, txt_project_new_location.Text, txt_project_new_map_location.Text);
-                        OpenMainWindow(OpenedProject);
+                        try
+                        {
+                            OpenedProject = Project.New(txt_project_name.Text, txt_project_new_location.Text, txt_project_new_map_location.Text);
+                            OpenMainWindow(OpenedProject);
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                         break;
                     case "open":
                         OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
@@ -128,8 +135,16 @@ namespace amrts_map
                                 string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
                                 MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                             }
-                            OpenedProject = Project.Open(openProjectDialog.FileName);
-                            OpenMainWindow(OpenedProject);
+
+                            try
+                            {
+                                OpenedProject = Project.Open(openProjectDialog.FileName);
+                                OpenMainWindow(OpenedProject);
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                         }
                         break;
                     case "packer":
@@ -205,21 +220,15 @@ namespace amrts_map
             lb_recent.SelectedIndex = -1; // Reset the selected recent file (if applicable)
             try
             {
-                if (openedProject != null)
+                if (openedProject == null) openedProject = new OpenedProject();
+                if (openedProject.Initialized)
                 {
-                    if (openedProject.Initialized)
+                    if (openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
                     {
-                        if (openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
-                        {
-                            MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
-                        RecentlyOpened.Add(openedProject.Project["Name"], openedProject.Project["Path"]);
-                    }
-                    else
-                    {
+                        MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
+                    RecentlyOpened.Add(openedProject.Project["Name"], openedProject.Project["Path"]);
                 }
 
                 MainWindow mainWindow = new MainWindow(openedProject);

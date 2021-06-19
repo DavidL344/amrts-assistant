@@ -14,18 +14,21 @@ namespace amrts_map
         [JsonIgnore] public Dictionary<string, string> Project = new Dictionary<string, string>();
         public Dictionary<string, string> Map = new Dictionary<string, string>();
         public Dictionary<string, string> PathVars = new Dictionary<string, string>();
+        [JsonIgnore] public bool RequiresInitialization
+        {
+            get
+            {
+                Dictionary<string, string>[] dictionaries = new Dictionary<string, string>[] { Map, PathVars };
+                foreach (Dictionary<string, string> dictionary in dictionaries)
+                    foreach (KeyValuePair<string, string> entry in Map)
+                        if (entry.Value != null) return true;
+                return false;
+            }
+        }
         [JsonIgnore] public bool Initialized {
             get
             {
-                try
-                {
-                    return this.IsValid();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
-                    return false;
-                }
+                return RequiresInitialization && this.IsValid();
             }
         }
 

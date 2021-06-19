@@ -47,17 +47,10 @@ namespace amrts_map
             }
             else newProject.Map["x-e"] = newProject.Map["x-e_edit"] = newProject.Map["x-e_export"] = null;
 
-            try
-            {
-                foreach (KeyValuePair<string, string> entry in newProject.PathVars) Directory.CreateDirectory(entry.Value);
-                File.Copy(mapFilePath, newProject.Map["x"]);
-                if (newProject.Map["x-e"] != null) File.Copy(mapExtensionFilePath, newProject.Map["x-e"]);
-                UnpackMap(newProject);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            foreach (KeyValuePair<string, string> entry in newProject.PathVars) Directory.CreateDirectory(entry.Value);
+            File.Copy(mapFilePath, newProject.Map["x"]);
+            if (newProject.Map["x-e"] != null) File.Copy(mapExtensionFilePath, newProject.Map["x-e"]);
+            UnpackMap(newProject);
 
             Save(newProject);
             return newProject;
@@ -70,6 +63,7 @@ namespace amrts_map
             // The object has to be created beforehand to assign non-serialized variables
             OpenedProject obj = new OpenedProject();
             obj.Reset(); // Suppresses the warning about the unnecessary assignment above
+
             obj = JsonConvert.DeserializeObject<OpenedProject>(File.ReadAllText(projectPath));
 
             // Set the values of variables that were not deserialized
