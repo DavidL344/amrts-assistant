@@ -50,20 +50,37 @@ namespace amrts_map
             bool useRelativePath = false;
             if (type == "relative") useRelativePath = true;
 
+            // The project file doesn't have to be located at the project's root
+            // Alternative - ignore the root tag
+            if (useRelativePath)
+            {
+                MessageBox.Show(this.PathVars["Root"] + "\r\n" + Path.GetDirectoryName(this.Project["Path"]) + "\\");
+                if (this.PathVars["Root"] == Path.GetDirectoryName(this.Project["Path"]) + "\\")
+                    this.PathVars["Root"] = "";
+            }
+            else
+            {
+                if (PathVars["Root"] == "")
+                {
+                    this.PathVars["Root"] = Path.GetDirectoryName(this.Project["Path"]) + "\\";
+                }
+                else
+                {
+                    this.PathVars["Root"] = InternalMethods.GetPath(this.Project["Path"], this.PathVars["Root"], useRelativePath);
+                }
+            }
+
+            foreach (string pathVarKey in pathVarKeys)
+                this.PathVars[pathVarKey] = this.PathVars[pathVarKey] != null ? InternalMethods.GetPath(this.PathVars["Root"], this.PathVars[pathVarKey], useRelativePath) : null;
+
             foreach (string xType in xTypes)
             {
                 if (IsKeyValid(xType))
                 {
                     foreach (string xKey in xKeys)
-                        this.Map[xType + xKey] = this.Map[xType + xKey] != null ? InternalMethods.GetPath(this.Project["Path"], this.Map[xType + xKey], useRelativePath) : null;
+                        this.Map[xType + xKey] = this.Map[xType + xKey] != null ? InternalMethods.GetPath(this.PathVars["Root"], this.Map[xType + xKey], useRelativePath) : null;
                 }
             }
-
-            foreach (string pathVarKey in pathVarKeys)
-                this.PathVars[pathVarKey] = this.PathVars[pathVarKey] != null ? InternalMethods.GetPath(this.Project["Path"], this.PathVars[pathVarKey], useRelativePath) : null;
-
-            // The project file should always be located at the project's root
-            if (useRelativePath) this.PathVars["Root"] = "";
         }
 
         public bool IsKeyValid(string dictionaryKey, bool strictIO = false)
@@ -121,7 +138,7 @@ namespace amrts_map
                         case "Root":
                             throw new IOException("The project root couldn't be found!");
                         case "Cache":
-                            throw new DirectoryNotFoundException("The directory containing cached map files couldn't be found!");
+                            throw new DirectoryNotFoundException("The directory containing cached map files couldn't be found!" + this.PathVars[value]);
                         case "Edit":
                             amrts_map.Project.DiscardChanges(this);
                             break;
