@@ -128,8 +128,8 @@ namespace amrts_map
 
         public static void Build(OpenedProject openedProject)
         {
-            if (openedProject.IsKeyValid("x")) File.Delete(openedProject.Map["x_export"]);
-            if (openedProject.IsKeyValid("x-e", true)) File.Delete(openedProject.Map["x-e_export"]);
+            if (openedProject.IsKeyValid("x") && File.Exists(openedProject.Map["x_export"])) File.Delete(openedProject.Map["x_export"]);
+            if (openedProject.IsKeyValid("x-e", true) && File.Exists(openedProject.Map["x-e_export"])) File.Delete(openedProject.Map["x-e_export"]);
             PackMap(openedProject);
         }
 

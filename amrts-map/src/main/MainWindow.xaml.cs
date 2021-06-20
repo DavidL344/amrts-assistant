@@ -114,7 +114,16 @@ namespace amrts_map
 
         public void PerformAction(string action)
         {
-            if (!OpenedProject.Initialized)
+            bool initialized;
+            try
+            {
+                initialized = !OpenedProject.Initialized;
+            }
+            catch
+            {
+                initialized = false;
+            }
+            if (initialized)
             {
                 switch (action.ToLower())
                 {
@@ -134,53 +143,60 @@ namespace amrts_map
                 }
             }
 
-            switch (action.ToLower())
+            try
             {
-                case "file_new":
-                    InternalMethods.Run(null, "-new");
-                    break;
-                case "file_open":
-                    InternalMethods.Run(null, "-open");
-                    break;
-                case "file_save":
-                    Project.Save(OpenedProject);
-                    break;
-                case "file_save_as":
-                    Project.SaveAs(OpenedProject);
-                    break;
-                case "edit_discard_changes":
-                    MessageBoxResult messageBoxResult = MessageBox.Show("Discard changes?", InternalMethods.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
-                    if (messageBoxResult == MessageBoxResult.Yes) Project.DiscardChanges(OpenedProject);
-                    break;
-                case "edit_run_studio":
-                case "project_item_new":
-                case "project_item_add":
-                    MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
-                    break;
-                case "project_show_explorer":
-                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("explorer.exe"), OpenedProject.Project["Root"]);
-                    break;
-                case "project_show_terminal":
-                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("cmd.exe"), null, OpenedProject.Project["Root"]);
-                    break;
-                case "build_build_project":
-                    Project.Build(OpenedProject);
-                    break;
-                case "build_clean_project":
-                    Project.CleanExport(OpenedProject);
-                    break;
-                case "help_about":
-                    Dialog.About(this);
-                    break;
-                case "file_close":
-                    Project.Close(OpenedProject);
-                    this.Close();
-                    break;
-                case "file_exit":
-                    Environment.Exit(0);
-                    break;
-                default:
-                    break;
+                switch (action.ToLower())
+                {
+                    case "file_new":
+                        InternalMethods.Run(null, "-new");
+                        break;
+                    case "file_open":
+                        InternalMethods.Run(null, "-open");
+                        break;
+                    case "file_save":
+                        Project.Save(OpenedProject);
+                        break;
+                    case "file_save_as":
+                        Project.SaveAs(OpenedProject);
+                        break;
+                    case "edit_discard_changes":
+                        MessageBoxResult messageBoxResult = MessageBox.Show("Discard changes?", InternalMethods.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                        if (messageBoxResult == MessageBoxResult.Yes) Project.DiscardChanges(OpenedProject);
+                        break;
+                    case "edit_run_studio":
+                    case "project_item_new":
+                    case "project_item_add":
+                        MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                        break;
+                    case "project_show_explorer":
+                        InternalMethods.Run(InternalMethods.GetProcessStartInfo("explorer.exe"), OpenedProject.Project["Root"]);
+                        break;
+                    case "project_show_terminal":
+                        InternalMethods.Run(InternalMethods.GetProcessStartInfo("cmd.exe"), null, OpenedProject.Project["Root"]);
+                        break;
+                    case "build_build_project":
+                        Project.Build(OpenedProject);
+                        break;
+                    case "build_clean_project":
+                        Project.CleanExport(OpenedProject);
+                        break;
+                    case "help_about":
+                        Dialog.About(this);
+                        break;
+                    case "file_close":
+                        Project.Close(OpenedProject);
+                        this.Close();
+                        break;
+                    case "file_exit":
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
