@@ -25,6 +25,7 @@ namespace amrts_map
         public string ProjectPath;
         private OpenedProject OpenedProject;
         private TabControl mainTabControl;
+        private TreeView mainTreeView;
 
         public MainWindow(OpenedProject openedProject)
         {
@@ -54,6 +55,21 @@ namespace amrts_map
             {
                 this.Title = String.Format("{0} | {1}", OpenedProject.Project["Name"], this.Title);
                 ti_projectName.Header = OpenedProject.Project["Name"];
+            }
+        }
+
+        private bool ProjectInitialized
+        {
+            get
+            {
+                try
+                {
+                    return OpenedProject.Initialized;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
 
@@ -114,16 +130,7 @@ namespace amrts_map
 
         public void PerformAction(string action)
         {
-            bool initialized;
-            try
-            {
-                initialized = !OpenedProject.Initialized;
-            }
-            catch
-            {
-                initialized = false;
-            }
-            if (initialized)
+            if (!ProjectInitialized)
             {
                 switch (action.ToLower())
                 {
@@ -211,6 +218,48 @@ namespace amrts_map
                 TabItem tabItem = new TabItem();
                 tabItem.Header = sampleTabName;
                 mainTabControl.Items.Add(tabItem);
+            }
+        }
+
+        private void TreeView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!ProjectInitialized) return;
+            mainTreeView = (sender as TreeView);
+            mainTreeView.Items.Clear();
+
+            foreach (string xType in new string[] { OpenedProject.Map["x_edit"], OpenedProject.Map["x-e_edit"] })
+            {
+
+                string[] files = Directory.GetFiles(xType, "*", SearchOption.AllDirectories);
+                TreeViewItem newChild = new TreeViewItem();
+                newChild.Header = Path.GetFileName(Path.GetDirectoryName(xType)).Replace("_", ".");
+                newChild.IsExpanded = true;
+
+                foreach (string file in files)
+                {
+                    StackPanel stackPanel = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal
+                    };
+
+                    Image image = new Image
+                    {
+                        Source = null /*new BitmapImage(new Uri(@""))*/,
+                        Width = 16,
+                        Height = 16
+                    };
+
+                    Label lbl = new Label
+                    {
+                        Content = Path.GetFileName(file),
+                        Tag = Path.GetFullPath(file)
+                    };
+
+                    stackPanel.Children.Add(image);
+                    stackPanel.Children.Add(lbl);
+                    newChild.Items.Add(stackPanel);
+                }
+                mainTreeView.Items.Add(newChild);
             }
         }
     }

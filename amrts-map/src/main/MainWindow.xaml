@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
 
         <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="1,0,0,0" Margin="-0.5,0,0,1"/>
@@ -89,7 +89,7 @@
         </TabControl>
         <TabControl Grid.Row="1" Grid.Column="1" TabStripPlacement="Bottom">
             <TabItem Header="File Explorer">
-                <Grid/>
+                <TreeView Loaded="TreeView_Loaded"/>
             </TabItem>
             <TabItem Header="Properties">
                 <Grid/>
