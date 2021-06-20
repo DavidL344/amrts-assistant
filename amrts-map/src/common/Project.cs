@@ -29,13 +29,12 @@ namespace amrts_map
 
             newProject.Project["Name"] = name;
             newProject.Project["Path"] = String.Format(@"{0}\{1}.{2}", projectRoot, name, FileExtension);
-            newProject.PathVars["Root"] = projectRoot;
+            newProject.Project["Root"] = projectRoot;
             newProject.PathVars["Cache"] = String.Format(@"{0}\{1}\", projectRoot, "cache");
             newProject.PathVars["Edit"] = String.Format(@"{0}\{1}\", projectRoot, "edit");
             newProject.PathVars["Export"] = String.Format(@"{0}\{1}\", projectRoot, "export");
 
             string mapExtensionFilePath = Path.ChangeExtension(mapFilePath, ".x-e");
-            newProject.Map["Name"] = Path.GetFileNameWithoutExtension(mapFilePath);
             newProject.Map["x"] = Path.Combine(newProject.PathVars["Cache"], Path.GetFileName(mapFilePath));
             newProject.Map["x_edit"] = Path.Combine(newProject.PathVars["Edit"], Path.GetFileNameWithoutExtension(mapFilePath) + @"_x\");
             newProject.Map["x_export"] = Path.Combine(newProject.PathVars["Export"], Path.GetFileName(mapFilePath));
@@ -70,25 +69,13 @@ namespace amrts_map
             obj.Project = new Dictionary<string, string>()
             {
                 { "Name", Path.GetFileNameWithoutExtension(projectPath) },
-                { "Path", projectPath }
+                { "Path", projectPath },
+                { "Root", Path.GetDirectoryName(projectPath) }
             };
 
             // Get full path of the files (parts of the serialized object contain relative paths)
             obj.ChangePathType("absolute");
             return obj;
-        }
-
-        public static OpenedProject OpenMap(string mapPath)
-        {
-            if (!File.Exists(mapPath)) throw new FileNotFoundException("The map doesn't exist!");
-            
-            OpenedProject map = new OpenedProject();
-            map.Project["Name"] = Path.GetFileName(Path.GetFileName(mapPath));
-            map.Project["Path"] = null;
-            map.Map["Name"] = map.Project["Name"];
-            map.Map["x"] = mapPath;
-            if (File.Exists(Path.ChangeExtension(mapPath, ".x-e"))) map.Map["x-e"] = Path.ChangeExtension(mapPath, ".x-e");
-            return map;
         }
 
         public static void Save(OpenedProject openedProject)

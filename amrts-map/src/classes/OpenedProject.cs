@@ -34,7 +34,7 @@ namespace amrts_map
 
         [JsonIgnore] readonly string[] xTypes = new string[] { "x", "x-e" };
         [JsonIgnore] readonly string[] xKeys = new string[] { "", "_edit", "_export" };
-        [JsonIgnore] readonly string[] pathVarKeys = new string[] { "Root", "Cache", "Edit", "Export" };
+        [JsonIgnore] readonly string[] pathVarKeys = new string[] { "Cache", "Edit", "Export" };
 
         public OpenedProject()
         {
@@ -61,9 +61,6 @@ namespace amrts_map
 
             foreach (string pathVarKey in pathVarKeys)
                 this.PathVars[pathVarKey] = this.PathVars[pathVarKey] != null ? InternalMethods.GetPath(this.Project["Path"], this.PathVars[pathVarKey], useRelativePath) : null;
-
-            // The project file should always be located at the project's root
-            if (useRelativePath) this.PathVars["Root"] = "";
         }
 
         public bool IsKeyValid(string dictionaryKey, bool strictIO = false)
@@ -140,10 +137,9 @@ namespace amrts_map
         {
             Project["Name"] = null;
             Project["Path"] = null;
-            Map["Name"] = null;
+            Project["Root"] = null;
             Map["x"] = null;
             Map["x-e"] = null;
-            PathVars["Root"] = null;
             PathVars["Cache"] = null;
             PathVars["Edit"] = null;
             PathVars["Export"] = null;

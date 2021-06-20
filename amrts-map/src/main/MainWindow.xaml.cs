@@ -158,10 +158,10 @@ namespace amrts_map
                     MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     break;
                 case "project_show_explorer":
-                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("explorer.exe"), OpenedProject.PathVars["Root"]);
+                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("explorer.exe"), OpenedProject.Project["Root"]);
                     break;
                 case "project_show_terminal":
-                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("cmd.exe"), null, OpenedProject.PathVars["Root"]);
+                    InternalMethods.Run(InternalMethods.GetProcessStartInfo("cmd.exe"), null, OpenedProject.Project["Root"]);
                     break;
                 case "build_build_project":
                     Project.Build(OpenedProject);
