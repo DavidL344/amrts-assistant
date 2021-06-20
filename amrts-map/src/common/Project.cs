@@ -128,9 +128,18 @@ namespace amrts_map
 
         public static void Build(OpenedProject openedProject)
         {
+            foreach (string file in Directory.GetFiles(openedProject.PathVars["Edit"]))
+            {
+                //DrPack.Bridge.Format.ConvertFile(file, "dr2");
+            }
+
             if (openedProject.IsKeyValid("x") && File.Exists(openedProject.Map["x_export"])) File.Delete(openedProject.Map["x_export"]);
             if (openedProject.IsKeyValid("x-e", true) && File.Exists(openedProject.Map["x-e_export"])) File.Delete(openedProject.Map["x-e_export"]);
             PackMap(openedProject);
+
+
+
+            DrPack.Bridge.Format.ConvertFile(openedProject.Map["x_export"], "amrts");
         }
 
         public static void Close(OpenedProject openedProject)
