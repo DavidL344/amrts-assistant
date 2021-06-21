@@ -59,9 +59,10 @@ namespace amrts_map
             string selectedItem = (string)lb_recent.SelectedItem;
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
-            if (debug) await Dialog.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
+            
             try
             {
+                if (debug) await Dialog.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
                 OpenedProject = Project.Open(selectedItemArray[1].Trim());
                 OpenMainWindow(OpenedProject);
             }
@@ -130,14 +131,14 @@ namespace amrts_map
                         OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
                         if (openProjectDialog != null)
                         {
-                            if (debug)
-                            {
-                                string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
-                                await Dialog.Show(info);
-                            }
-
                             try
                             {
+                                if (debug)
+                                {
+                                    string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
+                                    await Dialog.Show(info);
+                                }
+
                                 OpenedProject = Project.Open(openProjectDialog.FileName);
                                 OpenMainWindow(OpenedProject);
                             }

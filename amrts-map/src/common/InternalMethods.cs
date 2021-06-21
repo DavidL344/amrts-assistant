@@ -120,9 +120,17 @@ namespace amrts_map
 
         public async static void CatchException(Exception e, bool expected = false)
         {
-            string title = expected ? null : "An exception has occured";
-            ContentDialogResult contentDialogResult = await Dialog.Show(e.Message, title, expected ? DialogButton.OK : DialogButton.OKClipboard);
-            if (contentDialogResult == ContentDialogResult.Secondary) Clipboard.SetText($"An exception has occured:\r\n{e.Message}\r\n{e.StackTrace}");
+            try
+            {
+                string title = expected ? null : "An exception has occured";
+                ContentDialogResult contentDialogResult = await Dialog.Show(e.Message, title, expected ? DialogButton.OK : DialogButton.OKClipboard);
+                if (contentDialogResult == ContentDialogResult.Secondary) Clipboard.SetText($"An exception has occured:\r\n{e.Message}\r\n{e.StackTrace}");
+            }
+            catch (Exception ex)
+            {
+                string errorinfo = String.Format("An error has occured while trying to handle the exception:\r\n{0}\r\n\r\nThe exception:\r\n{1}", ex.Message, e.Message);
+                MessageBox.Show(errorinfo, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
