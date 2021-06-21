@@ -198,8 +198,7 @@ namespace amrts_map
             }
             catch (Exception e)
             {
-                ContentDialogResult contentDialogResult = await Dialog.Show(e.Message, "An exception has occured", DialogButton.OKClipboard);
-                if (contentDialogResult == ContentDialogResult.Secondary) Clipboard.SetText($"An exception has occured:\r\n{e.Message}\r\n{e.StackTrace}");
+                InternalMethods.CatchException(e, false);
             }
         }
 

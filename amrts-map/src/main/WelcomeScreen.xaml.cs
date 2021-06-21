@@ -67,7 +67,7 @@ namespace amrts_map
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                InternalMethods.CatchException(e, false);
             }
         }
 
@@ -123,7 +123,7 @@ namespace amrts_map
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                            InternalMethods.CatchException(e, false);
                         }
                         break;
                     case "open":
@@ -143,7 +143,7 @@ namespace amrts_map
                             }
                             catch (Exception e)
                             {
-                                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                                InternalMethods.CatchException(e, false);
                             }
                         }
                         break;
@@ -178,9 +178,8 @@ namespace amrts_map
             }
             catch (Exception e)
             {
-                MessageBoxImage messageBoxImage = MessageBoxImage.Error;
-                if (e is System.ComponentModel.WarningException) messageBoxImage = MessageBoxImage.Warning;
-                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, messageBoxImage);
+                // If the exception is a warning, it was expected
+                InternalMethods.CatchException(e, e is System.ComponentModel.WarningException);
             }
         }
 
@@ -246,7 +245,7 @@ namespace amrts_map
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                InternalMethods.CatchException(e, false);
             }
         }
 
@@ -268,7 +267,14 @@ namespace amrts_map
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("The map file is invalid!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                    try
+                    {
+                        throw new InvalidDataException("The map file is invalid!");
+                    }
+                    catch (Exception ex)
+                    {
+                        InternalMethods.CatchException(ex, true);
+                    }
                 }
             }
         }
@@ -307,7 +313,7 @@ namespace amrts_map
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                            InternalMethods.CatchException(e, false);
                         }
                         finally
                         {

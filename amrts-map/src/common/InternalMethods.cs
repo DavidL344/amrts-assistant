@@ -1,4 +1,6 @@
-﻿using System;
+﻿using amrts_map.Dialogs;
+using ModernWpf.Controls;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace amrts_map
@@ -113,6 +116,13 @@ namespace amrts_map
                 default:
                     return false;
             }
+        }
+
+        public async static void CatchException(Exception e, bool expected = false)
+        {
+            string title = expected ? null : "An exception has occured";
+            ContentDialogResult contentDialogResult = await Dialog.Show(e.Message, title, expected ? DialogButton.OK : DialogButton.OKClipboard);
+            if (contentDialogResult == ContentDialogResult.Secondary) Clipboard.SetText($"An exception has occured:\r\n{e.Message}\r\n{e.StackTrace}");
         }
     }
 }
