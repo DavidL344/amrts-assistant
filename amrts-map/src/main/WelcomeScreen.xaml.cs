@@ -52,14 +52,14 @@ namespace amrts_map
             lb_recent.Items.Clear();
         }
 
-        private void OpenRecentFile(bool debug = false)
+        private async void OpenRecentFile(bool debug = false)
         {
             if (Keyboard.IsKeyDown(Key.Escape)) lb_recent.SelectedIndex = -1;
             if (lb_recent.SelectedIndex == -1) return;
             string selectedItem = (string)lb_recent.SelectedItem;
             string[] selectedItemArray = selectedItem.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int selectedIndex = lb_recent.SelectedIndex;
-            if (debug) MessageBox.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
+            if (debug) await Dialog.Show(String.Format("Selected ID: {0}\r\nItem Name: {1}\r\nItem Path: {2}", selectedIndex, selectedItemArray[0], selectedItemArray[1].Trim()));
             try
             {
                 OpenedProject = Project.Open(selectedItemArray[1].Trim());
@@ -97,7 +97,7 @@ namespace amrts_map
             }
         }
 
-        private void PerformAction(string action, bool debug = false)
+        private async void PerformAction(string action, bool debug = false)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace amrts_map
                             if (debug)
                             {
                                 string info = String.Format("Selected file: {0}", openProjectDialog.FileName);
-                                MessageBox.Show(info, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                                await Dialog.Show(info);
                             }
 
                             try
@@ -214,7 +214,7 @@ namespace amrts_map
             }
         }
 
-        private void OpenMainWindow(OpenedProject openedProject = null)
+        private async void OpenMainWindow(OpenedProject openedProject = null)
         {
             lb_recent.SelectedIndex = -1; // Reset the selected recent file (if applicable)
             try
@@ -224,7 +224,7 @@ namespace amrts_map
                 {
                     if (openedProject.Project["Path"] != null && !File.Exists(openedProject.Project["Path"]))
                     {
-                        MessageBox.Show("The file doesn't exist!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                        await Dialog.Show("The file doesn't exist!");
                         return;
                     }
                     RecentlyOpened.Add(openedProject.Project["Name"], openedProject.Project["Path"]);
@@ -249,14 +249,14 @@ namespace amrts_map
             }
         }
 
-        private void FileDropped(object sender, DragEventArgs e)
+        private async void FileDropped(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (files.Length != 1)
                 {
-                    MessageBox.Show("Only one file is supported at a time.", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                    await Dialog.Show("Only one file is supported at a time.");
                     return;
                 }
 

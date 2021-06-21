@@ -168,7 +168,7 @@ namespace amrts_map
                     case "edit_run_studio":
                     case "project_item_new":
                     case "project_item_add":
-                        await Dialog.Show("Coming Soon!", null, DialogButton.OK);
+                        await Dialog.Show("Coming Soon!");
                         break;
                     case "project_show_explorer":
                         InternalMethods.Run(InternalMethods.GetProcessStartInfo("explorer.exe"), OpenedProject.Project["Root"]);
