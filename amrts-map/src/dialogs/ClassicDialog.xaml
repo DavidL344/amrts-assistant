@@ -1,0 +1,12 @@
+﻿<ui:ContentDialog
+    x:Class="amrts_map.Dialogs.ClassicDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    Title="Preview"
+    PrimaryButtonText="Yes"
+    SecondaryButtonText="No"
+    CloseButtonText="Cancel"
+    DefaultButton="Primary">
+    <TextBlock x:Name="tb_text" Text="Preview TextBlock Text"/>
+</ui:ContentDialog>

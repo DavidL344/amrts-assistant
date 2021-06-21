@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using amrts_map.Dialogs;
+using Microsoft.Win32;
+using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +66,37 @@ namespace amrts_map
             AboutBox aboutBox = new AboutBox();
             aboutBox.Owner = owner;
             aboutBox.ShowDialog();
+        }
+
+        public static async Task<ContentDialogResult> Show(string dialogText, string caption = null, string[] buttonText = null, ContentDialogButton defaultButton = ContentDialogButton.Primary)
+        {
+            int buttonTextArrayLength = 3;
+            bool showTitle = caption != null;
+            if (buttonText == null) buttonText = DialogButton.OK;
+
+            if (buttonText.Length != buttonTextArrayLength)
+            {
+                List<string> buttonTextList = buttonText.OfType<string>().ToList();
+                for (int i = buttonTextList.Count; i <= buttonTextArrayLength; i++)
+                    buttonTextList.Add(null);
+                buttonText = buttonTextList.ToArray();
+            }
+
+            for (int i = 0; i < buttonText.Length; i++)
+                if (string.IsNullOrEmpty(buttonText[i])) buttonText[i] = "";
+
+            ClassicDialog dialog = new ClassicDialog(showTitle)
+            {
+                Title = caption ?? "",
+                DialogText = dialogText,
+                PrimaryButtonText = buttonText[0],
+                SecondaryButtonText = buttonText[1],
+                CloseButtonText = buttonText[2],
+                DefaultButton = defaultButton,
+            };
+
+            // ContentDialogResult.Primary, ContentDialogResult.Secondary, ContentDialogResult.None
+            return await dialog.ShowAsync();
         }
     }
 }

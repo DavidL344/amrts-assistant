@@ -62,6 +62,10 @@
     </ApplicationDefinition>
     <Compile Include="src\classes\RecentlyOpened.cs" />
     <Compile Include="src\common\DirectoryMethods.cs" />
+    <Compile Include="src\dialogs\ClassicDialog.xaml.cs">
+      <DependentUpon>ClassicDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\dialogs\DialogButton.cs" />
     <Compile Include="src\main\about\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
@@ -72,6 +76,10 @@
     <Compile Include="src\main\WelcomeScreen.xaml.cs">
       <DependentUpon>WelcomeScreen.xaml</DependentUpon>
     </Compile>
+    <Page Include="src\dialogs\ClassicDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="src\main\about\AboutBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

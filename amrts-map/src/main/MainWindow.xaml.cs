@@ -1,4 +1,6 @@
-﻿using System;
+﻿using amrts_map.Dialogs;
+using ModernWpf.Controls;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -112,7 +114,7 @@ namespace amrts_map
             if (action != null) PerformAction(action);
         }
 
-        public void PerformAction(string action)
+        public async void PerformAction(string action)
         {
             bool initialized;
             try
@@ -160,13 +162,13 @@ namespace amrts_map
                         Project.SaveAs(OpenedProject);
                         break;
                     case "edit_discard_changes":
-                        MessageBoxResult messageBoxResult = MessageBox.Show("Discard changes?", InternalMethods.Name, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
-                        if (messageBoxResult == MessageBoxResult.Yes) Project.DiscardChanges(OpenedProject);
+                        ContentDialogResult contentDialogResult = await Dialog.Show("Discard changes?", null, DialogButton.YesNo, ContentDialogButton.Secondary);
+                        if (contentDialogResult == ContentDialogResult.Primary) Project.DiscardChanges(OpenedProject);
                         break;
                     case "edit_run_studio":
                     case "project_item_new":
                     case "project_item_add":
-                        MessageBox.Show("Coming Soon!", InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                        await Dialog.Show("Coming Soon!", null, DialogButton.OK);
                         break;
                     case "project_show_explorer":
                         InternalMethods.Run(InternalMethods.GetProcessStartInfo("explorer.exe"), OpenedProject.Project["Root"]);
@@ -196,7 +198,8 @@ namespace amrts_map
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, InternalMethods.Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                ContentDialogResult contentDialogResult = await Dialog.Show(e.Message, "An exception has occured", DialogButton.OKClipboard);
+                if (contentDialogResult == ContentDialogResult.Secondary) Clipboard.SetText($"An exception has occured:\r\n{e.Message}\r\n{e.StackTrace}");
             }
         }
 
