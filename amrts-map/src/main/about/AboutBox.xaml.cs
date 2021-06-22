@@ -22,13 +22,15 @@ namespace amrts_map
     /// </summary>
     public partial class AboutBox : Window
     {
-        public string NameWithVersion {
+        public string NameWithVersion
+        {
             get
             {
                 return String.Format("{0} v{1}", AssemblyTitle, AssemblyVersion);
             }
         }
-        private string LongLine {
+        private string LongLine
+        {
             get
             {
                 string temp = "";
@@ -39,12 +41,12 @@ namespace amrts_map
 
         private readonly List<string[]> licenseList = new List<string[]>
         {
-            // { <Component Name>, <License URL>, <License Type> }
+            // { <Component Name>, <Component URL>, <License Type>, <License URL> }
             // <License Type> is only applied if there's neither online nor offline license information
-            new string[] { "app", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE", "MIT" },
-            new string[] { "ModernWpfUI", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE", "MIT" },
-            new string[] { "Newtonsoft.Json", "https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md", "MIT" },
-            new string[] { "Dark Reign 2 - Pack Utility", null, "MIT" }
+            new string[] { "app", "https://github.com/DavidL344/amrts-assistant", "MIT", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE" },
+            new string[] { "ModernWpfUI", "https://github.com/Kinnara/ModernWpf", "MIT", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE" },
+            new string[] { "Newtonsoft.Json", "https://github.com/JamesNK/Newtonsoft.Json", "MIT", "https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md" },
+            new string[] { "Dark Reign 2 - Pack Utility", "https://code.google.com/archive/p/darkreign2/", "MIT", null }
         };
 
         public AboutBox()
@@ -57,7 +59,7 @@ namespace amrts_map
         {
             foreach (string[] license in licenseList)
             {
-                string licenseData = await LoadLicense(license[0], license[1], license[2]);
+                string licenseData = await LoadLicense(license[0], license[1], license[2], license[3]);
 
                 if (licenseData == null) return;
                 TabItem tabItem = new TabItem();
@@ -83,35 +85,41 @@ namespace amrts_map
             tc_licenseInfo.Visibility = Visibility.Visible;
         }
 
-        public async Task<string> LoadLicense(string localName = null, string onlineUrl = null, string alternativeLicenseInfo = null)
+        public async Task<string> LoadLicense(string componentName = null, string componentUrl = null, string licenseType = null, string licenseUrl = null)
         {
-            if (onlineUrl == null) return LoadOfflineLicense(localName, alternativeLicenseInfo).Trim();
             string licenseData = "";
+            if (licenseUrl == null)
+            {
+                licenseData = LoadOfflineLicense(componentName, componentUrl, licenseType).Trim();
+                licenseData = String.Format("Project URL: {0}\r\n\r\n{1}", componentUrl, licenseData);
+                return licenseData;
+            }
 
             try
             {
                 using (HttpClient webClient = new HttpClient())
                 {
-                    licenseData = await webClient.GetStringAsync(new Uri(onlineUrl));
+                    licenseData = await webClient.GetStringAsync(new Uri(licenseUrl));
                 }
             }
             catch (Exception e)
             {
-                licenseData = LoadOfflineLicense(localName, alternativeLicenseInfo);
-                licenseData = String.Format("Warning: This license might not be up-to-date.\r\nReason: {0}\r\nFetching attempted from: {1}\r\n{2}\r\n\r\n{3}", e.Message, onlineUrl, LongLine, licenseData.TrimStart());
+                licenseData = LoadOfflineLicense(componentName, componentUrl, licenseType);
+                licenseData = String.Format("Warning: This license might not be up-to-date.\r\nReason: {0}\r\nFetching attempted from: {1}\r\n{2}\r\n\r\n{3}", e.Message, licenseUrl, LongLine, licenseData.TrimStart());
             }
             finally
             {
                 licenseData = licenseData.Trim();
+                licenseData = String.Format("Project URL: {0}\r\n\r\n{1}", componentUrl, licenseData);
             }
             return licenseData;
         }
 
-        private string LoadOfflineLicense(string localName = null, string alternativeLicenseInfo = null)
+        private string LoadOfflineLicense(string componentName = null, string componentUrl = null, string licenseType = null)
         {
             byte[] licenseBytes;
             string licenseData = "";
-            switch (localName)
+            switch (componentName)
             {
                 case null:
                 case "app":
@@ -124,7 +132,7 @@ namespace amrts_map
                     licenseBytes = Properties.Resources.LICENSE_Newtonsoft_Json;
                     break;
                 default:
-                    return String.Format("This component is available under the following license: {0} (the direct link to the license couldn't be found)", alternativeLicenseInfo);
+                    return String.Format("This component is available under the following license: {0} (the direct link to the license couldn't be found)", licenseType);
             }
             using (MemoryStream stream = new MemoryStream(licenseBytes))
             using (StreamReader reader = new StreamReader(stream))
