@@ -89,5 +89,15 @@ namespace amrts_map.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] LICENSE_Ookii_Dialogs_Wpf {
+            get {
+                object obj = ResourceManager.GetObject("LICENSE_Ookii_Dialogs_Wpf", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

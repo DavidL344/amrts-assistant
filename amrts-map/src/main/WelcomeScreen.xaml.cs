@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Path = System.IO.Path;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
+using Ookii.Dialogs.Wpf;
 
 namespace amrts_map
 {
@@ -109,11 +110,11 @@ namespace amrts_map
                         SwitchUI("project_new");
                         break;
                     case "new_location_browse":
-                        FolderBrowserDialog projectLocation = Dialog.BrowseFolder();
+                        VistaFolderBrowserDialog projectLocation = Dialog.BrowseFolder();
                         if (projectLocation != null) txt_project_new_location.Text = projectLocation.SelectedPath;
                         break;
                     case "new_map_location_browse":
-                        OpenFileDialog mapLocation = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
+                        VistaOpenFileDialog mapLocation = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
                         if (mapLocation != null) txt_project_new_map_location.Text = mapLocation.FileName;
                         break;
                     case "new_create":
@@ -128,7 +129,7 @@ namespace amrts_map
                         }
                         break;
                     case "open":
-                        OpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
+                        VistaOpenFileDialog openProjectDialog = Dialog.OpenFile("Open a project", String.Format("{0}|*.{1}", Project.FileTypeName, Project.FileExtension));
                         if (openProjectDialog != null)
                         {
                             try
@@ -153,11 +154,11 @@ namespace amrts_map
                         SwitchUI("map_packer");
                         break;
                     case "packer_mapfile_location_browse":
-                        OpenFileDialog mapLocationPack = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
+                        VistaOpenFileDialog mapLocationPack = Dialog.OpenFile("Select a map", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
                         if (mapLocationPack != null) txt_map_packer_mapfile_location.Text = mapLocationPack.FileName;
                         break;
                     case "packer_directory_location_browse":
-                        FolderBrowserDialog projectLocationPack = Dialog.BrowseFolder();
+                        VistaFolderBrowserDialog projectLocationPack = Dialog.BrowseFolder();
                         if (projectLocationPack != null) txt_map_packer_directory_location.Text = projectLocationPack.SelectedPath;
                         break;
                     case "packer_extract":
@@ -167,7 +168,7 @@ namespace amrts_map
                         DrPack.Bridge.Run.Create(txt_map_packer_mapfile_location.Text, txt_map_packer_directory_location.Text);
                         break;
                     case "packer_save_as":
-                        SaveFileDialog folderBrowserDialog = Dialog.SaveFile("Pack Map As...", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
+                        VistaSaveFileDialog folderBrowserDialog = Dialog.SaveFile("Pack Map As...", String.Format("{0}|*.{1}", Project.MapTypeName, Project.MapExtension));
                         if (folderBrowserDialog != null) DrPack.Bridge.Run.Create(folderBrowserDialog.FileName, txt_map_packer_directory_location.Text);
                         break;
                     case "empty":

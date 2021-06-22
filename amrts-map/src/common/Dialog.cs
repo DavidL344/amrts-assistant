@@ -1,6 +1,7 @@
 ﻿using amrts_map.Dialogs;
 using Microsoft.Win32;
 using ModernWpf.Controls;
+using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace amrts_map
 {
     public class Dialog
     {
-        public static OpenFileDialog OpenFile(string title = "Open file", string filter = "All Supported Files|*.amramp;*.x")
+        public static VistaOpenFileDialog OpenFile(string title = "Open file", string filter = "All Supported Files|*.amramp;*.x")
         {
-            OpenFileDialog openFile = new OpenFileDialog
+            VistaOpenFileDialog openFile = new VistaOpenFileDialog
             {
                 Title = title,
                 Filter = filter,
@@ -26,38 +27,33 @@ namespace amrts_map
                 DereferenceLinks = true
             };
 
-            if (openFile.ShowDialog() == true) return openFile;
+            if ((bool)openFile.ShowDialog()) return openFile;
             return null;
         }
 
-        public static SaveFileDialog SaveFile(string title = "Save file", string filter = "All Supported Files|*.amramp;*.x")
+        public static VistaSaveFileDialog SaveFile(string title = "Save file", string filter = "All Supported Files|*.amramp;*.x")
         {
-            SaveFileDialog saveFile = new SaveFileDialog
+            VistaSaveFileDialog saveFile = new VistaSaveFileDialog
             {
                 Title = title,
                 Filter = filter,
                 CheckPathExists = true,
                 DereferenceLinks = true
             };
-            if (saveFile.ShowDialog() == true) return saveFile;
+            if ((bool)saveFile.ShowDialog()) return saveFile;
             return null;
         }
 
-        public static FolderBrowserDialog BrowseFolder(string title = "Browse folder", bool newFolderButton = true)
+        public static VistaFolderBrowserDialog BrowseFolder(string title = "Browse folder", bool newFolderButton = true)
         {
-            // A possible alternative (2 MS Office References): https://stackoverflow.com/a/28449277
-            // - Microsoft.Office.Core (Microsoft Office 14.0 Object Library)
-            // - Microsoft.Office.Interop.Excel (Microsoft Excel 14.0 Object Library)
-
-            // A possible alternative (1 NuGet Package): https://stackoverflow.com/a/49087741
-            // - <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
-            FolderBrowserDialog browseFolder = new FolderBrowserDialog
+            VistaFolderBrowserDialog browseFolder = new VistaFolderBrowserDialog
             {
                 Description = title,
-                ShowNewFolderButton = newFolderButton
+                ShowNewFolderButton = newFolderButton,
+                UseDescriptionForTitle = true
             };
 
-            if (browseFolder.ShowDialog() == DialogResult.OK) return browseFolder;
+            if ((bool)browseFolder.ShowDialog()) return browseFolder;
             return null;
         }
 

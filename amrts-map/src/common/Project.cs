@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
+using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 
 namespace amrts_map
@@ -95,7 +97,7 @@ namespace amrts_map
 
         public static void SaveAs(OpenedProject openedProject)
         {
-            FolderBrowserDialog projectNewLocation = Dialog.BrowseFolder("Save Project As...");
+            VistaFolderBrowserDialog projectNewLocation = Dialog.BrowseFolder("Save Project As...");
             if (projectNewLocation != null) DirectoryMethods.Copy(DirectoryMethods.GetParentDirectory(openedProject.Project["Path"]), projectNewLocation.SelectedPath);
         }
 

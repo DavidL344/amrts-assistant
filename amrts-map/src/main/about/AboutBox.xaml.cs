@@ -46,7 +46,8 @@ namespace amrts_map
             new string[] { "app", "https://github.com/DavidL344/amrts-assistant", "MIT", "https://raw.githubusercontent.com/DavidL344/amrts-assistant/master/LICENSE" },
             new string[] { "ModernWpfUI", "https://github.com/Kinnara/ModernWpf", "MIT", "https://raw.githubusercontent.com/Kinnara/ModernWpf/master/LICENSE" },
             new string[] { "Newtonsoft.Json", "https://github.com/JamesNK/Newtonsoft.Json", "MIT", "https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md" },
-            new string[] { "Dark Reign 2 - Pack Utility", "https://code.google.com/archive/p/darkreign2/", "MIT", null }
+            new string[] { "Dark Reign 2 - Pack Utility", "https://code.google.com/archive/p/darkreign2/", "MIT", null },
+            new string[] { "Ookii Dialogs", "https://github.com/ookii-dialogs/ookii-dialogs-wpf", "BSD-3-Clause", "https://raw.githubusercontent.com/ookii-dialogs/ookii-dialogs-wpf/master/LICENSE" }
         };
 
         public AboutBox()
@@ -130,6 +131,9 @@ namespace amrts_map
                     break;
                 case "Newtonsoft.Json":
                     licenseBytes = Properties.Resources.LICENSE_Newtonsoft_Json;
+                    break;
+                case "Ookii Dialogs":
+                    licenseBytes = Properties.Resources.LICENSE_Ookii_Dialogs_Wpf;
                     break;
                 default:
                     return String.Format("This component is available under the following license: {0} (the direct link to the license couldn't be found)", licenseType);
