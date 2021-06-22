@@ -6,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 
 namespace amrts_map
 {

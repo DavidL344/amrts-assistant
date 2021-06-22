@@ -1,5 +1,4 @@
 ﻿using amrts_map.Dialogs;
-using Microsoft.Win32;
 using ModernWpf.Controls;
 using Ookii.Dialogs.Wpf;
 using System;
@@ -8,9 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace amrts_map
 {
