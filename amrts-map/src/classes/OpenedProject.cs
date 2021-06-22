@@ -13,6 +13,7 @@ namespace amrts_map
         [JsonIgnore] public Dictionary<string, string> Project = new Dictionary<string, string>();
         public Dictionary<string, string> Map = new Dictionary<string, string>();
         public Dictionary<string, string> PathVars = new Dictionary<string, string>();
+        public PackageInfo PackageInfo = new PackageInfo();
         [JsonIgnore] public bool RequiresInitialization
         {
             get
