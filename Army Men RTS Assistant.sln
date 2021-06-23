@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amrts-map", "amrts-map\amrt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrPack.Bridge", "DrPack.Bridge\DrPack.Bridge.csproj", "{18031622-2F41-468F-9CCC-5BADED5DB7A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amrts-store", "amrts-store\amrts-store.csproj", "{65ADFB78-8693-4C9B-84FB-5B97CC248579}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{18031622-2F41-468F-9CCC-5BADED5DB7A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18031622-2F41-468F-9CCC-5BADED5DB7A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18031622-2F41-468F-9CCC-5BADED5DB7A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65ADFB78-8693-4C9B-84FB-5B97CC248579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65ADFB78-8693-4C9B-84FB-5B97CC248579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65ADFB78-8693-4C9B-84FB-5B97CC248579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65ADFB78-8693-4C9B-84FB-5B97CC248579}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
