@@ -30,7 +30,7 @@ namespace amrts_store
         {
             if (args.IsSettingsSelected)
             {
-                contentFrame.Navigate(typeof(Settings));
+                contentFrame.Navigate(typeof(Pages.Settings));
             }
             else
             {

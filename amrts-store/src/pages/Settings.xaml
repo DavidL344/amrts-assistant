@@ -1,7 +1,8 @@
 ﻿<Page x:Class="amrts_store.Pages.Settings"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:amrts_store.Pages"
       mc:Ignorable="d"
@@ -11,8 +12,54 @@
     <Grid>
         <TabControl TabStripPlacement="Bottom">
             <TabItem Header="General">
-                <Grid Margin="10">
-                    <TextBlock Text="Coming Soon!" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Grid Margin="20,15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="The game client directory:" Margin="0,5,5,0"/>
+                    <TextBox x:Name="general_game_client" Grid.Row="0" Grid.Column="1" IsEnabled="False"/>
+                    <Button Grid.Row="0" Grid.Column="2" Content="..." Margin="5,0" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Security">
+                <Grid Margin="20,15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <ui:ToggleSwitch x:Name="security_game_client_mods" Grid.Row="0" Header="Enable modifications to the game client" IsOn="False" Toggled="Toggled"/>
+                    <ui:ToggleSwitch x:Name="security_unknown_sources_enable" Grid.Row="1" Header="Enable unknown sources" IsOn="False" Margin="0,5" Toggled="Toggled"/>
+                    <Grid Grid.Row="2" IsEnabled="{Binding IsOn, ElementName=security_unknown_sources_enable}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Select a preferred store provider" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="security_store_list" Grid.Row="1" HorizontalAlignment="Stretch" SelectionChanged="SelectionChanged">
+                            <ComboBoxItem Content="Army Men RTS Store (GitHub)" IsSelected="True"/>
+                            <ComboBoxItem Content="Third-party store 1"/>
+                            <ComboBoxItem Content="Third-party store 2"/>
+                        </ComboBox>
+                        <Button Grid.Row="1" Grid.Column="1" Content="Add" Margin="5,0"/>
+                        <CheckBox x:Name="security_enable_external_installation" Grid.Row="2" Content="Enable external installation" IsChecked="False" Margin="5" Click="Toggled"/>
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>
