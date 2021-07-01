@@ -90,5 +90,37 @@ namespace amrts_map
             // ContentDialogResult.Primary, ContentDialogResult.Secondary, ContentDialogResult.None
             return await dialog.ShowAsync();
         }
+
+        public static async Task<object[]> ShowWithCheckbox(string dialogText, string caption = null, string[] buttonText = null, ContentDialogButton defaultButton = ContentDialogButton.Primary, string checkboxText = null)
+        {
+            int buttonTextArrayLength = 3;
+            bool showTitle = caption != null;
+            if (buttonText == null) buttonText = DialogButton.OK;
+
+            if (buttonText.Length != buttonTextArrayLength)
+            {
+                List<string> buttonTextList = buttonText.OfType<string>().ToList();
+                for (int i = buttonTextList.Count; i <= buttonTextArrayLength; i++)
+                    buttonTextList.Add(null);
+                buttonText = buttonTextList.ToArray();
+            }
+
+            for (int i = 0; i < buttonText.Length; i++)
+                if (string.IsNullOrEmpty(buttonText[i])) buttonText[i] = "";
+
+            ClassicDialog dialog = new ClassicDialog(showTitle, true)
+            {
+                Title = caption ?? "",
+                DialogText = dialogText,
+                CheckboxText = checkboxText ?? "",
+                PrimaryButtonText = buttonText[0],
+                SecondaryButtonText = buttonText[1],
+                CloseButtonText = buttonText[2],
+                DefaultButton = defaultButton,
+            };
+
+            ContentDialogResult returnValue = await dialog.ShowAsync();
+            return new object[] { returnValue, dialog.CheckboxValue };
+        }
     }
 }

@@ -11,7 +11,18 @@ namespace amrts_map.Dialogs
             set => tb_text.Text = value;
         }
 
-        public ClassicDialog(bool showTitle = true)
+        public string CheckboxText
+        {
+            get => (string)chk_box.Content;
+            set => chk_box.Content = value;
+        }
+
+        public bool CheckboxValue
+        {
+            get => (bool)chk_box.IsChecked;
+        }
+
+        public ClassicDialog(bool showTitle = true, bool showCheckbox = false)
         {
             InitializeComponent();
 
@@ -22,6 +33,8 @@ namespace amrts_map.Dialogs
                 tb_text.HorizontalAlignment = HorizontalAlignment.Center;
                 tb_text.VerticalAlignment = VerticalAlignment.Center;
             }
+
+            if (!showCheckbox) chk_box.Visibility = Visibility.Collapsed;
         }
     }
 }

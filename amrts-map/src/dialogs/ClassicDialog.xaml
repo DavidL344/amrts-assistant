@@ -8,5 +8,13 @@
     SecondaryButtonText="No"
     CloseButtonText="Cancel"
     DefaultButton="Primary">
-    <TextBlock x:Name="tb_text" Text="Preview TextBlock Text"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="tb_text" Grid.Row="0" Text="Preview TextBlock Text"/>
+        <CheckBox x:Name="chk_box" Grid.Row="1" Content="Preview Checkbox Text" Margin="0,10,0,0"/>
+    </Grid>
+    
 </ui:ContentDialog>

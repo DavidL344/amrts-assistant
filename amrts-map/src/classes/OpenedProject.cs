@@ -139,7 +139,11 @@ namespace amrts_map
             Project["Path"] = null;
             Project["Root"] = null;
             Map["x"] = null;
+            Map["x_edit"] = null;
+            Map["x_export"] = null;
             Map["x-e"] = null;
+            Map["x-e_edit"] = null;
+            Map["x-e_export"] = null;
             PathVars["Cache"] = null;
             PathVars["Edit"] = null;
             PathVars["Export"] = null;

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using amrts_map.Dialogs;
+using ModernWpf.Controls;
+using Newtonsoft.Json;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
@@ -113,6 +115,62 @@ namespace amrts_map
                 DrPack.Bridge.Run.Create(openedProject.Map["x_export"], openedProject.Map["x_edit"]);
             if (openedProject.IsKeyValid("x-e") && Directory.Exists(openedProject.Map["x-e_edit"]))
                 DrPack.Bridge.Run.Create(openedProject.Map["x-e_export"], openedProject.Map["x-e_edit"]);
+        }
+
+        public static async void AddFile(OpenedProject openedProject, string[] importedFiles = null)
+        {
+            if (importedFiles == null)
+            {
+                VistaFileDialog fileToAdd = Dialog.OpenFile("Add Existing Item...", "All Files|*.*");
+                if (fileToAdd == null) return;
+                importedFiles = new string[] { fileToAdd.FileName };
+            }
+            
+            string destinationType;
+            ContentDialogResult packFileResult = await Dialog.Show("Where should the selected file(s) be packed?", null, new string[] { "Save to .x", "Save to .x-e", "Cancel" });
+            switch (packFileResult)
+            {
+                case ContentDialogResult.Primary:
+                    destinationType = openedProject.Map["x_edit"];
+                    break;
+                case ContentDialogResult.Secondary:
+                    destinationType = openedProject.Map["x-e_edit"];
+                    break;
+                default:
+                    return;
+            }
+
+            object[] overwriteFileResult = null;
+            foreach (string fileSource in importedFiles)
+            {
+                if (!File.Exists(fileSource)) return;
+                string fileSourceName = Path.GetFileName(fileSource);
+                string fileDest = String.Format(@"{0}\{1}", destinationType, fileSourceName);
+                if (File.Exists(fileDest))
+                {
+                    if (overwriteFileResult == null || !(bool)overwriteFileResult[1])
+                        overwriteFileResult = await Dialog.ShowWithCheckbox($"The file already exists:\r\n{fileSourceName}\r\n\r\nOverwrite?", null, DialogButton.YesNoCancel, ContentDialogButton.Primary, "Apply to all occurences");
+
+                    System.Windows.MessageBox.Show($"Selected: {overwriteFileResult[0]}\r\nAll: {overwriteFileResult[1]}");
+
+                    switch ((ContentDialogResult)overwriteFileResult[0])
+                    {
+                        case ContentDialogResult.Primary:
+                            File.Delete(fileDest);
+                            File.Copy(fileSource, fileDest);
+                            break;
+                        case ContentDialogResult.Secondary:
+                            break;
+                        case ContentDialogResult.None:
+                        default:
+                            return;
+                    }
+                }
+                else
+                {
+                    File.Copy(fileSource, fileDest);
+                }
+            }
         }
 
         public static void DiscardChanges(OpenedProject openedProject)
