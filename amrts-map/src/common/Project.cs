@@ -151,8 +151,6 @@ namespace amrts_map
                     if (overwriteFileResult == null || !(bool)overwriteFileResult[1])
                         overwriteFileResult = await Dialog.ShowWithCheckbox($"The file already exists:\r\n{fileSourceName}\r\n\r\nOverwrite?", null, DialogButton.YesNoCancel, ContentDialogButton.Primary, "Apply to all occurences");
 
-                    System.Windows.MessageBox.Show($"Selected: {overwriteFileResult[0]}\r\nAll: {overwriteFileResult[1]}");
-
                     switch ((ContentDialogResult)overwriteFileResult[0])
                     {
                         case ContentDialogResult.Primary:

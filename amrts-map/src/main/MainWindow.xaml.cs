@@ -218,6 +218,7 @@ namespace amrts_map
 
         private void Grid_Drop(object sender, DragEventArgs e)
         {
+            this.Activate();
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             Project.AddFile(OpenedProject, files);
         }
