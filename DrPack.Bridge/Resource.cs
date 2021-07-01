@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace DrPack.Bridge
 {
-    class Resource
+    internal class Resource
     {
-        public static void Extract(byte[] resource, string location)
+        internal static void Extract(byte[] resource, string location)
         {
+            if (File.Exists(location)) File.Delete(location);
             using (FileStream fsDst = new FileStream(location, FileMode.CreateNew, FileAccess.Write))
             {
                 fsDst.Write(resource, 0, resource.Length);

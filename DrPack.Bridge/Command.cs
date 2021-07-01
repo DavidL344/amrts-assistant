@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DrPack.Bridge
 {
-    public class Command
+    internal class Command
     {
         private static ProcessStartInfo ProcessInfoTemplate
         {
@@ -28,7 +28,7 @@ namespace DrPack.Bridge
             }
         }
 
-        public static string Execute(string arguments, bool verify = true, bool returnConsoleOutput = false, bool ignoreWarnings = false)
+        internal static string Execute(string arguments, bool verify = true, bool returnConsoleOutput = false, bool ignoreWarnings = false)
         {
             if (verify) Verify(arguments, ignoreWarnings);
             Main.Extract();
@@ -47,7 +47,7 @@ namespace DrPack.Bridge
             return null;
         }
 
-        public static void Verify(string arguments, bool ignoreWarnings = false)
+        internal static void Verify(string arguments, bool ignoreWarnings = false)
         {
             string[] args = arguments.Split(' ');
             if (args.Length < 2 || args.Length > 5) throw new ArgumentOutOfRangeException(String.Format("Invalid argument length detected!\r\nExpected 2-5, got {0}.", args.Length));
