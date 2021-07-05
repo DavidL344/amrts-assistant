@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace amrts_map.Dialogs
 {
-    public partial class ClassicDialog : ContentDialog
+    public partial class ClassicDialog
     {
         public string DialogText
         {

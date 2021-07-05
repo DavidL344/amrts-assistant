@@ -164,8 +164,10 @@ namespace amrts_map
                         if (contentDialogResult == ContentDialogResult.Primary) Project.DiscardChanges(OpenedProject);
                         break;
                     case "edit_run_studio":
-                    case "project_item_new":
                         await Dialog.Show("Coming Soon!");
+                        break;
+                    case "project_item_new":
+                        await Dialog.ShowContentDialog();
                         break;
                     case "project_item_add":
                         Project.AddFile(OpenedProject);

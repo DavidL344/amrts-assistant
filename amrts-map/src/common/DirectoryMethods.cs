@@ -76,5 +76,10 @@ namespace amrts_map
                 dir.Delete(true);
             }
         }
+
+        public static string[] GetAllFiles(string directory, string filter = "*.*")
+        {
+            return Directory.GetFiles(directory, filter, SearchOption.AllDirectories).ToArray();
+        }
     }
 }

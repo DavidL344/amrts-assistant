@@ -122,5 +122,12 @@ namespace amrts_map
             ContentDialogResult returnValue = await dialog.ShowAsync();
             return new object[] { returnValue, dialog.CheckboxValue };
         }
+
+        public static async Task<Dialogs.ContentDialog> ShowContentDialog(System.Windows.Controls.Grid grid = null)
+        {
+            Dialogs.ContentDialog contentDialog = new Dialogs.ContentDialog();
+            await contentDialog.ShowAsync(ContentDialogPlacement.Popup);
+            return contentDialog;
+        }
     }
 }
